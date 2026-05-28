@@ -30,8 +30,9 @@
     },
     'application': True,
     'installable': True,
-    'license': 'OPL-1',
-    'price': 5.99,
-    'currency': 'USD',
+    'license': 'LGPL-3',
+    # 'license': 'OPL-1',
+    # 'price': 5.99,
+    # 'currency': 'USD',
     'images': ['static/description/banner.png'],
 }
