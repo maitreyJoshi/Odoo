@@ -13,7 +13,7 @@
         - Archive notes
     """,
     'author': 'Mj',
-    'website': 'https://www.github.com/maitreyjoshi',
+    'website': '',
     'category': 'Productivity',
     'depends': ['base', 'mail'],
     'data': [
