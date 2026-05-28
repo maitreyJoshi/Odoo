@@ -6,565 +6,470 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Odoo Keep Notes - Premium Productivity Solution</title>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <!-- FontAwesome for Premium Icons -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --primary: #FFC107;
-            --primary-light: #FFE082;
-            --primary-dark: #FF8F00;
-            --odoo-purple: #714B67;
-            --odoo-purple-light: #8E5B81;
-            --dark-gray: #1E293B;
-            --light-gray: #F8FAFC;
-            --border-color: #E2E8F0;
-            --text-main: #334155;
-            --text-muted: #64748B;
-            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius-lg: 16px;
+            --bg-color: #030712;
+            --surface: rgba(30, 41, 59, 0.6);
+            --surface-hover: rgba(30, 41, 59, 0.8);
+            --border: rgba(255, 255, 255, 0.1);
+            --border-hover: rgba(255, 255, 255, 0.2);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --accent-primary: #FBBF24;
+            /* Amber */
+            --accent-secondary: #A855F7;
+            /* Purple */
+            --accent-tertiary: #38BDF8;
+            /* Blue */
+            --radius-xl: 32px;
+            --radius-lg: 20px;
             --radius-md: 12px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
             color: var(--text-main);
-            background-color: #FFFFFF;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
+            line-height: 1.7;
+            overflow-x: hidden;
         }
 
-        /* Container styling for Odoo App Store sandbox */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+        }
+
+        /* Abstract Background Glows */
+        .bg-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.35;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: var(--accent-secondary);
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            bottom: -20%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: var(--accent-primary);
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            top: 40%;
+            left: 20%;
+            width: 45vw;
+            height: 45vw;
+            background: var(--accent-tertiary);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(5%, 10%) scale(1.1);
+            }
+
+            100% {
+                transform: translate(-5%, -5%) scale(0.9);
+            }
+        }
+
         .store-wrapper {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 10;
         }
 
         /* Hero Section */
-        .hero-banner {
-            position: relative;
-            background: linear-gradient(135deg, #1E1B4B 0%, #311042 50%, #4C1D95 100%);
-            border-radius: var(--radius-lg);
-            padding: 60px 40px;
+        .hero-section {
             text-align: center;
-            color: #FFFFFF;
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            margin-bottom: 60px;
+            padding: 80px 20px 100px 20px;
+            position: relative;
         }
 
-        .hero-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 80% 20%, rgba(255, 193, 7, 0.15) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .app-badge {
+        .hero-badge {
             display: inline-flex;
             align-items: center;
-            background: rgba(255, 193, 7, 0.15);
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            color: var(--primary);
-            padding: 6px 16px;
+            gap: 10px;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: var(--accent-primary);
+            padding: 10px 24px;
             border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 24px;
-            gap: 8px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
         }
 
         .hero-title {
-            font-size: 48px;
+            font-size: 72px;
             font-weight: 800;
-            margin: 0 0 16px 0;
-            letter-spacing: -1px;
-            line-height: 1.2;
-            background: linear-gradient(to right, #FFFFFF, #FFE082);
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #94A3B8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .hero-subtitle {
-            font-size: 20px;
-            font-weight: 400;
-            color: #E2E8F0;
-            max-width: 700px;
-            margin: 0 auto 32px auto;
-        }
-
-        .hero-meta {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .meta-pill {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #F1F5F9;
-            backdrop-filter: blur(8px);
-        }
-
-        .meta-pill i {
-            color: var(--primary);
-            margin-right: 8px;
-        }
-
-        /* Section Headings */
-        .section-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .section-tag {
-            color: var(--odoo-purple);
-            font-weight: 700;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .section-title {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--dark-gray);
-            margin: 0;
-            letter-spacing: -0.5px;
-        }
-
-        /* Feature Cards Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 30px;
-            margin-bottom: 60px;
-        }
-
-        .feature-card {
-            background: #FFFFFF;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 30px;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background-color: var(--border-color);
-            transition: var(--transition);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
-            border-color: rgba(255, 193, 7, 0.3);
-        }
-
-        .feature-card:hover::before {
-            background-color: var(--primary);
-            height: 100%;
-        }
-
-        .feature-icon-wrapper {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 193, 7, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-            transition: var(--transition);
-        }
-
-        .feature-card:hover .feature-icon-wrapper {
-            background: var(--primary);
-            color: #FFFFFF;
-            transform: rotate(5deg);
-        }
-
-        .feature-icon-wrapper i {
-            font-size: 24px;
-            color: var(--primary-dark);
-            transition: var(--transition);
-        }
-
-        .feature-card:hover .feature-icon-wrapper i {
-            color: #FFFFFF;
-        }
-
-        .feature-card-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--dark-gray);
-            margin: 0 0 12px 0;
-        }
-
-        .feature-card-desc {
-            font-size: 15px;
+            font-size: 22px;
+            font-weight: 300;
             color: var(--text-muted);
-            margin: 0;
-            line-height: 1.5;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         /* Banner Showcase */
         .banner-showcase {
             width: 100%;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-xl);
             overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            margin-bottom: 60px;
-            border: 1px solid var(--border-color);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            margin-bottom: 120px;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .banner-showcase::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-xl);
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
 
         .banner-showcase img {
             width: 100%;
-            height: auto;
             display: block;
-        }
-
-        /* Screenshots / Tabs section */
-        .screenshots-section {
-            background-color: var(--light-gray);
-            border-radius: var(--radius-lg);
-            padding: 50px 40px;
-            margin-bottom: 60px;
-            border: 1px solid var(--border-color);
-        }
-
-        .screenshots-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 50px;
-        }
-
-        .screenshot-item {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .screenshot-info {
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .screenshot-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--dark-gray);
-            margin: 0 0 8px 0;
-        }
-
-        .screenshot-desc {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin: 0;
-        }
-
-        .screenshot-frame {
-            background: #FFFFFF;
-            border: 8px solid #E2E8F0;
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-
-        .screenshot-frame:hover {
             transform: scale(1.01);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary-light);
         }
 
-        .screenshot-frame img {
-            width: 100%;
-            height: auto;
+        /* Module Showcase Sequence */
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .showcase-tag {
+            color: var(--accent-secondary);
+            font-weight: 800;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 16px;
             display: block;
         }
 
-        /* Admin Credentials Highlight */
-        .admin-badge-container {
-            background: linear-gradient(135deg, rgba(113, 75, 103, 0.05) 0%, rgba(255, 193, 7, 0.05) 100%);
-            border: 1px dashed var(--odoo-purple);
-            border-radius: var(--radius-md);
-            padding: 30px;
-            margin-bottom: 60px;
-            text-align: center;
+        .showcase-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: #FFFFFF;
         }
 
-        .admin-badge-title {
-            font-size: 18px;
+        .sequence-container {
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+        }
+
+        /* Glassmorphic Row */
+        .focus-row {
+            background: var(--surface);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 60px;
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .focus-row::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+        }
+
+        .focus-row:hover {
+            transform: translateY(-8px);
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(168, 85, 247, 0.1);
+        }
+
+        .focus-row.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .focus-content {
+            flex: 1;
+        }
+
+        .focus-num {
+            font-family: 'Outfit', sans-serif;
+            font-size: 80px;
+            font-weight: 800;
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .focus-row.reverse .focus-num {
+            left: auto;
+            right: 30px;
+        }
+
+        .focus-tag {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-tertiary);
+            border: 1px solid rgba(56, 189, 248, 0.2);
             font-weight: 700;
-            color: var(--odoo-purple);
-            margin-top: 0;
-            margin-bottom: 12px;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .focus-title {
+            font-size: 40px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+
+        .focus-desc {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        .focus-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .focus-list li {
+            font-size: 16px;
+            color: #E2E8F0;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .focus-list li i {
+            color: var(--accent-primary);
+            background: rgba(251, 191, 36, 0.1);
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-        }
-
-        .admin-badge-text {
-            font-size: 15px;
-            color: var(--text-main);
-            margin: 0 0 15px 0;
-        }
-
-        .credentials-box {
-            display: inline-flex;
-            gap: 20px;
-            justify-content: center;
-            background: #FFFFFF;
-            padding: 10px 25px;
-            border-radius: 50px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .credential-item {
+            border-radius: 50%;
             font-size: 14px;
-            font-weight: 600;
-            color: var(--text-main);
+            flex-shrink: 0;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.1);
         }
 
-        .credential-item span {
-            background-color: var(--light-gray);
-            border: 1px solid #CBD5E1;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            color: #0F172A;
-            margin-left: 5px;
-        }
-
-        /* Footer & Author Section */
-        .footer-section {
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+        .focus-image {
+            flex: 1.3;
             border-radius: var(--radius-lg);
-            padding: 50px 40px;
-            color: #FFFFFF;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .focus-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            pointer-events: none;
+        }
+
+        .focus-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.7s ease;
+        }
+
+        .focus-row:hover .focus-image img {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        .footer-section {
+            margin-top: 100px;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 60px 40px;
             text-align: center;
-            box-shadow: var(--shadow-lg);
         }
 
         .author-avatar {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: #0F172A;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, #F59E0B 100%);
+            color: #000;
             font-size: 32px;
             font-weight: 800;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(255, 193, 7, 0.4);
-            border: 3px solid #FFFFFF;
+            margin-bottom: 24px;
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+            font-family: 'Outfit', sans-serif;
         }
 
         .author-name {
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0 0 8px 0;
+            font-size: 28px;
+            font-weight: 800;
+            color: #FFF;
+            margin-bottom: 8px;
         }
 
         .author-title {
-            font-size: 14px;
-            color: var(--primary);
+            font-size: 16px;
+            color: var(--accent-tertiary);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-            margin-bottom: 20px;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: 30px;
             display: block;
         }
 
         .footer-line {
             height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            max-width: 300px;
-            margin: 0 auto 24px auto;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            max-width: 400px;
+            margin: 0 auto 30px auto;
         }
 
         .footer-links {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            font-size: 14px;
-            color: #94A3B8;
+            gap: 30px;
+            font-size: 15px;
+            color: var(--text-muted);
         }
 
         .footer-links a {
-            color: #FFFFFF;
+            color: #FFF;
             text-decoration: none;
             transition: var(--transition);
         }
 
         .footer-links a:hover {
-            color: var(--primary);
-            text-decoration: underline;
+            color: var(--accent-primary);
         }
 
-        /* Workflow Timeline styling */
-        .workflow-section {
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.02) 0%, rgba(113, 75, 103, 0.02) 100%);
-            border-radius: var(--radius-lg);
-            padding: 50px 40px;
-            margin-bottom: 60px;
-            border: 1px solid var(--border-color);
-        }
+        /* Responsive */
+        @media (max-width: 1024px) {
 
-        .timeline-container {
-            position: relative;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+            .focus-row,
+            .focus-row.reverse {
+                flex-direction: column;
+                padding: 40px 30px;
+                gap: 40px;
+            }
 
-        .timeline-line {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: linear-gradient(to bottom, var(--primary) 0%, var(--odoo-purple) 100%);
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-
-        .timeline-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            width: 100%;
-            position: relative;
-        }
-
-        .timeline-item:nth-child(even) {
-            flex-direction: row-reverse;
-        }
-
-        .timeline-badge {
-            width: 40px;
-            height: 40px;
-            background: #FFFFFF;
-            border: 4px solid var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            color: var(--dark-gray);
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-        }
-
-        .timeline-item:nth-child(even) .timeline-badge {
-            border-color: var(--odoo-purple);
-        }
-
-        .timeline-item:hover .timeline-badge {
-            transform: translateX(-50%) scale(1.1);
-            background-color: var(--primary);
-            color: #FFFFFF;
-        }
-
-        .timeline-item:nth-child(even):hover .timeline-badge {
-            background-color: var(--odoo-purple);
-        }
-
-        .timeline-content {
-            width: 44%;
-            background: #FFFFFF;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 25px;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-        }
-
-        .timeline-content:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-            border-color: rgba(255, 193, 7, 0.2);
-        }
-
-        .timeline-content h4 {
-            font-size: 18px;
-            font-weight: 700;
-            margin: 0 0 10px 0;
-            color: var(--dark-gray);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .timeline-content h4 i {
-            color: var(--primary-dark);
-        }
-
-        .timeline-item:nth-child(even) .timeline-content h4 i {
-            color: var(--odoo-purple-light);
-        }
-
-        .timeline-content p {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
             .hero-title {
-                font-size: 36px;
+                font-size: 50px;
             }
 
-            .hero-subtitle {
-                font-size: 16px;
+            .focus-title {
+                font-size: 32px;
             }
 
-            .screenshots-section {
-                padding: 30px 20px;
-            }
-
-            .footer-section {
-                padding: 30px 20px;
+            .focus-image {
+                width: 100%;
             }
         }
     </style>
@@ -572,22 +477,25 @@
 
 <body>
 
+    <!-- Animated Glassmorphism Background -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
     <div class="store-wrapper">
 
         <!-- Hero Section -->
-        <div class="hero-banner">
-            <div class="app-badge">
-                <i class="fa-solid fa-rocket"></i> Odoo 18 Ready
+        <div class="hero-section">
+            <div class="hero-badge">
+                <i class="fa-solid fa-bolt"></i> Ultimate Productivity
             </div>
             <h1 class="hero-title">Odoo Keep Notes</h1>
             <p class="hero-subtitle">
-                A sleek, highly productive, and visually stunning Google Keep-like notes manager built natively for Odoo
-                18 backend.
+                A sleek, highly productive, and visually stunning notes manager built natively for Odoo 18. Organize
+                your thoughts, pin tasks, and never miss a deadline.
             </p>
-            <div class="hero-meta">
-                <div class="meta-pill"><i class="fa-solid fa-check-double"></i> Fully Responsive</div>
-                <div class="meta-pill"><i class="fa-solid fa-palette"></i> Rich Color Customisation</div>
-            </div>
         </div>
 
         <!-- Premium Store Banner -->
@@ -595,213 +503,165 @@
             <img src="banner.png" alt="Odoo Keep Notes Banner" />
         </div>
 
-        <!-- Features Showcase -->
-        <div class="section-header">
-            <span class="section-tag">Features</span>
-            <h2 class="section-title">Why Choose Odoo Keep Notes?</h2>
+        <div class="showcase-header">
+            <span class="showcase-tag">Interface Walkthrough</span>
+            <h2 class="showcase-title">A Seamless Experience</h2>
         </div>
 
-        <div class="features-grid">
-            <!-- Feature 1 -->
-            <div class="feature-card">
-                <div class="feature-icon-wrapper">
-                    <i class="fa-solid fa-table-cells-large"></i>
+        <div class="sequence-container">
+
+            <!-- 1. App Icon Switcher -->
+            <div class="focus-row">
+                <span class="focus-num">01</span>
+                <div class="focus-content">
+                    <span class="focus-tag">Launch</span>
+                    <h3 class="focus-title">Native App Switcher Integration</h3>
+                    <p class="focus-desc">
+                        A customized premium flat icon blends flawlessly into your Odoo 18 home dashboard, giving you
+                        instant access to your notes from the start.
+                    </p>
+                    <ul class="focus-list">
+                        <li><i class="fa-solid fa-check"></i> <span>Premium icon design matching Odoo UI</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span>One-click direct launch into the workspace</span>
+                        </li>
+                    </ul>
                 </div>
-                <h3 class="feature-card-title">Color Kanban Cards</h3>
-                <p class="feature-card-desc">
-                    Beautifully layout your thoughts. Pick from 12+ vibrant Google Keep standard color codes to visually
-                    categorise tasks at a single glance.
-                </p>
+                <div class="focus-image">
+                    <img src="app_icon_switcher.png" alt="Native App Switcher" />
+                </div>
             </div>
 
-            <!-- Feature 2 -->
-            <div class="feature-card">
-                <div class="feature-icon-wrapper">
-                    <i class="fa-solid fa-thumbtack"></i>
+            <!-- 2. Home 05 -->
+            <div class="focus-row reverse">
+                <span class="focus-num">02</span>
+                <div class="focus-content">
+                    <span class="focus-tag"
+                        style="color: var(--accent-secondary); background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2);">Access</span>
+                    <h3 class="focus-title">Global Floating Access</h3>
+                    <p class="focus-desc">
+                        Start capturing notes immediately anywhere in your Odoo system using the beautiful global
+                        floating action button seamlessly integrated into the page.
+                    </p>
+                    <ul class="focus-list">
+                        <li><i class="fa-solid fa-check"></i> <span>Available dynamically from any screen</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span>Non-intrusive modern FAB design</span></li>
+                    </ul>
                 </div>
-                <h3 class="feature-card-title">Pin & Prioritise</h3>
-                <p class="feature-card-desc">
-                    Keep critical instructions or hot checklists right on top. Seamlessly pin or unpin notes with
-                    one-click toggles directly from Kanban cards or forms.
-                </p>
+                <div class="focus-image">
+                    <img src="Home_05.png" alt="Global Floating Access & Homepage" />
+                </div>
             </div>
 
-            <!-- Feature 3 -->
-            <div class="feature-card">
-                <div class="feature-icon-wrapper">
-                    <i class="fa-solid fa-tags"></i>
+            <!-- 3. Screenshot Form -->
+            <div class="focus-row">
+                <span class="focus-num">03</span>
+                <div class="focus-content">
+                    <span class="focus-tag"
+                        style="color: var(--accent-primary); background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.2);">Quick
+                        Capture</span>
+                    <h3 class="focus-title">Create New Notes Instantly</h3>
+                    <p class="focus-desc">
+                        Don't let ideas slip away. Create rich, detailed notes with our highly intuitive and beautiful
+                        form configuration tailored for rapid input.
+                    </p>
+                    <ul class="focus-list">
+                        <li><i class="fa-solid fa-check"></i> <span>Collaborative HTML Area for rich media</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span>Assign vibrant colors and multi-labels</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span>Schedule specific alarms and reminders</span></li>
+                    </ul>
                 </div>
-                <h3 class="feature-card-title">Labels & Multi-Tags</h3>
-                <p class="feature-card-desc">
-                    Tag notes under custom labels like 'Work', 'Ideas', 'Personal'. Filter and group search quickly
-                    inside the Odoo native search system.
-                </p>
+                <div class="focus-image">
+                    <img src="screenshot_form.png" alt="Create New Note Interface" />
+                </div>
             </div>
 
-            <!-- Feature 4 -->
-            <div class="feature-card">
-                <div class="feature-icon-wrapper">
-                    <i class="fa-solid fa-bell"></i>
+            <!-- 4. Screenshot Reminders -->
+            <div class="focus-row reverse">
+                <span class="focus-num">04</span>
+                <div class="focus-content">
+                    <span class="focus-tag">Stay on Track</span>
+                    <h3 class="focus-title">Dedicated Alarms Dashboard</h3>
+                    <p class="focus-desc">
+                        Focus only on upcoming deadlines and schedule-sensitive notes effortlessly with the specialized
+                        reminders dashboard.
+                    </p>
+                    <ul class="focus-list">
+                        <li><i class="fa-solid fa-check"></i> <span>View only notes with active alarms</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span>Never miss a critical deadline again</span></li>
+                    </ul>
                 </div>
-                <h3 class="feature-card-title">Reminders Integration</h3>
-                <p class="feature-card-desc">
-                    Never miss a deadline. Set precise alarm and reminder dates, color-coded directly in both form
-                    sheets and calendar timelines.
-                </p>
+                <div class="focus-image">
+                    <img src="screenshot_reminders.png" alt="Dedicated Alarms Dashboard" />
+                </div>
             </div>
-        </div>
 
-        <!-- Workflow / Flow of the Application -->
-        <div class="section-header">
-            <span class="section-tag">Interactive Guide</span>
-            <h2 class="section-title">Application Flow & Lifecycle</h2>
-        </div>
-
-        <div class="workflow-section">
-            <div class="timeline-container">
-                <div class="timeline-line"></div>
-
-                <!-- Step 1 -->
-                <div class="timeline-item">
-                    <div class="timeline-badge">1</div>
-                    <div class="timeline-content">
-                        <h4><i class="fa-solid fa-power-off"></i> Step 1: Discover & Launch</h4>
-                        <p>Locate the modern custom <strong>Keep Notes</strong> application icon directly inside your
-                            Odoo App Switcher (as highlighted in <i>Image 2</i>). The app integrates flawlessly into the
-                            native theme system.</p>
-                    </div>
+            <!-- 5. Screenshot Kanban -->
+            <div class="focus-row">
+                <span class="focus-num">05</span>
+                <div class="focus-content">
+                    <span class="focus-tag"
+                        style="color: var(--accent-secondary); background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2);">Prioritize</span>
+                    <h3 class="focus-title">Show All Pinned Notes</h3>
+                    <p class="focus-desc">
+                        Access your most critical instructions at a single glance. Keep your tasks perfectly organized
+                        in a vibrant Kanban workspace.
+                    </p>
+                    <ul class="focus-list">
+                        <li><i class="fa-solid fa-check"></i> <span>Pinned notes automatically stay pinned on top</span>
+                        </li>
+                        <li><i class="fa-solid fa-check"></i> <span>Visual color-coding for rapid identification</span>
+                        </li>
+                        <li><i class="fa-solid fa-check"></i> <span>Smooth drag-and-drop digital whiteboard</span></li>
+                    </ul>
                 </div>
-
-                <!-- Step 2 -->
-                <div class="timeline-item">
-                    <div class="timeline-badge">2</div>
-                    <div class="timeline-content">
-                        <h4><i class="fa-solid fa-pencil"></i> Step 2: Global Floating Access (FAB)</h4>
-                        <p>A yellow Floating Action Button (FAB) containing a pencil icon dynamically anchors in the
-                            bottom-right corner of your Odoo screens (as highlighted in <i>Image 2</i>). Start notes
-                            immediately, anywhere, anytime.</p>
-                    </div>
+                <div class="focus-image">
+                    <img src="screenshot_kanban.png" alt="Show All Pinned Notes in Kanban" />
                 </div>
-
-                <!-- Step 3 -->
-                <div class="timeline-item">
-                    <div class="timeline-badge">3</div>
-                    <div class="timeline-content">
-                        <h4><i class="fa-solid fa-window-restore"></i> Step 3: Quick Capture Modal</h4>
-                        <p>Click the FAB to launch an overlay modal titled <strong>"Take a Note"</strong> (as
-                            highlighted in <i>Image 3</i>). Write text, structure beautiful dynamic tables, assign
-                            tags/labels, and change card colors instantly.</p>
-                    </div>
-                </div>
-
-                <!-- Step 4 -->
-                <div class="timeline-item">
-                    <div class="timeline-badge">4</div>
-                    <div class="timeline-content">
-                        <h4><i class="fa-solid fa-layer-group"></i> Step 4: Manage & Prioritize</h4>
-                        <p>All your notes flow directly into the central Keep Notes Kanban Dashboard. Colored cards keep
-                            ideas structured, while pinned critical notes automatically stay organized right on top.</p>
-                    </div>
-                </div>
-
             </div>
-        </div>
 
-        <!-- Screenshots Showcase -->
-        <div class="section-header">
-            <span class="section-tag">Visuals</span>
-            <h2 class="section-title">Immersive Interface Showcase</h2>
-        </div>
-
-        <div class="screenshots-section">
-            <div class="screenshots-grid">
-
-
-                <!-- Screenshot 1 -->
-                <div class="screenshot-item">
-                    <div class="screenshot-info">
-                        <h3 class="screenshot-title">App Switcher Integration</h3>
-                        <p class="screenshot-desc">
-                            Our customized premium flat icon matches the modern Odoo 18 theme, blending natively into
-                            your backend home switcher dashboard.
-                        </p>
-                    </div>
-                    <div class="screenshot-frame">
-                        <img src="app_icon_switcher.png" alt="Odoo 18 App Switcher View" />
-                    </div>
+            <!-- 6. Screenshot Calendar -->
+            <div class="focus-row reverse">
+                <span class="focus-num">06</span>
+                <div class="focus-content">
+                    <span class="focus-tag"
+                        style="color: var(--accent-primary); background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.2);">Schedule</span>
+                    <h3 class="focus-title">Timeline Calendar Scheduling</h3>
+                    <p class="focus-desc">
+                        Visualize your action notes across Odoo's fully integrated interactive Calendar view to
+                        dynamically stay on top of your schedule.
+                    </p>
+                    <ul class="focus-list">
+                        <li><i class="fa-solid fa-check"></i> <span>Toggle Month, Week, and Day layouts</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span>Interactive drag-and-drop rescheduling</span></li>
+                    </ul>
                 </div>
-
-                <!-- Screenshot 2 -->
-                <div class="screenshot-item">
-                    <div class="screenshot-info">
-                        <h3 class="screenshot-title">Full Editor & Form Configuration</h3>
-                        <p class="screenshot-desc">
-                            Double click any card to edit details. Adjust multi-labels, pick card themes, schedule
-                            alarms, or paste media directly in the collaborative HTML area.
-                        </p>
-                    </div>
-                    <div class="screenshot-frame">
-                        <img src="screenshot_form.png" alt="Odoo Keep Notes Form View" />
-                    </div>
+                <div class="focus-image">
+                    <img src="screenshot_calendar.png" alt="Timeline Calendar Scheduling" />
                 </div>
-                <!-- Screenshot 3 -->
-                <div class="screenshot-item">
-                    <div class="screenshot-info">
-                        <h3 class="screenshot-title">Vibrant Kanban Workspace</h3>
-                        <p class="screenshot-desc">
-                            All your notes are displayed as cards with custom colors, tags, and pinned statuses,
-                            mirroring a clean digital whiteboard experience.
-                        </p>
-                    </div>
-                    <div class="screenshot-frame">
-                        <img src="screenshot_kanban.png" alt="Odoo Keep Notes Kanban View" />
-                    </div>
-                </div>
-
-
-                <!-- Screenshot 4 -->
-                <div class="screenshot-item">
-                    <div class="screenshot-info">
-                        <h3 class="screenshot-title">Organized Labels & Tags Management</h3>
-                        <p class="screenshot-desc">
-                            Easily manage your custom color-coded categories (Work, Personal, Ideas) in a clean table
-                            view (as highlighted in <i>Image 5</i>). Maintain absolute clarity in sorting notes.
-                        </p>
-                    </div>
-                    <div class="screenshot-frame">
-                        <img src="screenshot_labels.png" alt="Odoo Keep Notes Labels View" />
-                    </div>
-                </div>
-
-                <!-- Screenshot 5 -->
-                <div class="screenshot-item">
-                    <div class="screenshot-info">
-                        <h3 class="screenshot-title">Dedicated Alarms & Reminders Workspace</h3>
-                        <p class="screenshot-desc">
-                            Focus only on upcoming deadlines and schedule-sensitive notes in the specialized Reminders
-                            dashboard (as highlighted in <i>Image 4</i>). Filter out clutter effortlessly.
-                        </p>
-                    </div>
-                    <div class="screenshot-frame">
-                        <img src="screenshot_reminders.png" alt="Odoo Keep Notes Reminders View" />
-                    </div>
-                </div>
-
-                <!-- Screenshot 6 -->
-                <div class="screenshot-item">
-                    <div class="screenshot-info">
-                        <h3 class="screenshot-title">Timeline Calendar Scheduling</h3>
-                        <p class="screenshot-desc">
-                            Visualize your action notes across Odoo's fully integrated interactive Calendar view (as
-                            highlighted in <i>Image 6</i>). Toggle between Month, Week, and Day layouts.
-                        </p>
-                    </div>
-                    <div class="screenshot-frame">
-                        <img src="screenshot_calendar.png" alt="Odoo Keep Notes Calendar View" />
-                    </div>
-                </div>
-
             </div>
+
+            <!-- 7. Screenshot Labels -->
+            <div class="focus-row">
+                <span class="focus-num">07</span>
+                <div class="focus-content">
+                    <span class="focus-tag">Organize</span>
+                    <h3 class="focus-title">Organized Labels Management</h3>
+                    <p class="focus-desc">
+                        Easily manage your custom color-coded categories in a clean list view. Tag notes under custom
+                        labels like 'Work' or 'Personal'.
+                    </p>
+                    <ul class="focus-list">
+                        <li><i class="fa-solid fa-check"></i> <span>Filter and group search capabilities
+                                instantly</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span>Maintain absolute clarity across your data</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="focus-image">
+                    <img src="screenshot_labels.png" alt="Organized Labels Management" />
+                </div>
+            </div>
+
         </div>
 
         <!-- Footer / Credits -->
@@ -818,7 +678,6 @@
         </div>
 
     </div>
-
 </body>
 
 </html>
