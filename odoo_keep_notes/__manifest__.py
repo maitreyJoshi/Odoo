@@ -12,7 +12,7 @@
         - Tags and labels
         - Archive notes
     """,
-    'author': 'Maitrey Joshi',
+    'author': 'Mj',
     'website': 'https://www.github.com/maitreyjoshi',
     'category': 'Productivity',
     'depends': ['base', 'mail'],
