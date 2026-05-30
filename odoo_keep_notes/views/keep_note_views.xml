@@ -32,6 +32,7 @@
                         <group>
                             <field name="is_pinned" invisible="1"/>
                             <field name="is_trashed" widget="boolean_toggle" invisible="1"/>
+                            <field name="active" invisible="1"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field name="collaborator_ids" widget="many2many_avatar_user"/>
                         </group>
@@ -50,13 +51,13 @@
                             <field name="description" placeholder="Take a note..." widget="html" options="{'collaborative': true}" style="min-height: 200px;"/>
                         </page>
                         <page string="Checklist">
-                            <field name="todo_ids" widget="section_and_note_one2many" mode="list">
-                                <list editable="bottom" class="o_keep_checklist">
+                            <field name="todo_ids" widget="section_and_note_one2many" mode="tree">
+                                <tree editable="bottom" class="o_keep_checklist">
                                     <field name="sequence" widget="handle"/>
                                     <field name="display_type" column_invisible="True"/>
                                     <field name="is_done" widget="boolean_toggle"/>
                                     <field name="name" placeholder="Task item..." decoration-muted="is_done" decoration-strikethrough="is_done"/>
-                                </list>
+                                </tree>
                             </field>
                         </page>
                     </notebook>
@@ -70,7 +71,7 @@
         <field name="name">keep.note.tree</field>
         <field name="model">keep.note</field>
         <field name="arch" type="xml">
-            <list decoration-muted="active == False" decoration-warning="priority == '3'" sample="1">
+            <tree decoration-muted="active == False" decoration-warning="priority == '3'" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="priority" widget="priority"/>
                 <field name="name" class="fw-bold"/>
@@ -84,7 +85,7 @@
                 <field name="collaborator_ids" widget="many2many_avatar_user" optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="active" column_invisible="True"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -189,7 +190,7 @@
     <record id="action_keep_notes" model="ir.actions.act_window">
         <field name="name">Notes</field>
         <field name="res_model">keep.note</field>
-        <field name="view_mode">kanban,list,form,calendar</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
         <field name="search_view_id" ref="view_keep_note_search"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -204,7 +205,7 @@
     <record id="action_keep_notes_reminders" model="ir.actions.act_window">
         <field name="name">Reminders</field>
         <field name="res_model">keep.note</field>
-        <field name="view_mode">kanban,list,form,calendar</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
         <field name="domain">[('reminder_date', '!=', False)]</field>
         <field name="search_view_id" ref="view_keep_note_search"/>
     </record>
@@ -213,12 +214,12 @@
         <field name="name">keep.note.todo.tree</field>
         <field name="model">keep.note.todo</field>
         <field name="arch" type="xml">
-            <list editable="bottom" decoration-muted="is_done">
+            <tree editable="bottom" decoration-muted="is_done">
                 <field name="sequence" widget="handle"/>
                 <field name="is_done" widget="boolean_toggle"/>
                 <field name="name"/>
                 <field name="note_id" column_invisible="context.get('default_note_id')"/>
-            </list>
+            </tree>
         </field>
     </record>
 

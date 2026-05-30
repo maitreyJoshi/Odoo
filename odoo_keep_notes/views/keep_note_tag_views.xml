@@ -19,17 +19,17 @@
         <field name="name">keep.note.tag.tree</field>
         <field name="model">keep.note.tag</field>
         <field name="arch" type="xml">
-            <list editable="bottom">
+            <tree editable="bottom">
                 <field name="name"/>
                 <field name="color" widget="color_picker"/>
-            </list>
+            </tree>
         </field>
     </record>
 
     <record id="action_keep_note_tags" model="ir.actions.act_window">
         <field name="name">Labels</field>
         <field name="res_model">keep.note.tag</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
     </record>
 
     <menuitem id="menu_keep_note_tags" name="Labels" parent="menu_keep_notes_root" action="action_keep_note_tags" sequence="30"/>
