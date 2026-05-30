@@ -128,7 +128,7 @@ class KeepNote(models.Model):
             'date_deadline': self.reminder_date.date(),
             'user_id': self.user_id.id or self.env.user.id,
             'res_id': self.id,
-            'res_model_id': self.env['ir.model']._get(self._name).id,
+            'res_model_id': self.env['ir.model'].search([('model', '=', self._name)], limit=1).id,
         })
 
     def _update_reminder_activity(self):

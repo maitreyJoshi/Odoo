@@ -1,7 +1,7 @@
 {
     'name': 'Odoo Keep Notes',
-    'version': '18.0.1.0.0',
-    'summary': 'Google Keep like notes application for Odoo 18',
+    'version': '19.0.1.0.0',
+    'summary': 'Google Keep like notes application for Odoo 19',
     'description': """
         Odoo Keep Notes
         ===============
