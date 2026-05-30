@@ -8,6 +8,7 @@ class KeepNote(models.Model):
     _order = 'is_pinned desc, id desc'
 
     name = fields.Char(string='Title', required=True)
+    sequence = fields.Integer(string='Sequence', default=10)
     description = fields.Html(string='Note Content', sanitize=True)
     color = fields.Integer(string='Color Index', default=0)
     tag_ids = fields.Many2many('keep.note.tag', string='Labels')
@@ -17,9 +18,31 @@ class KeepNote(models.Model):
     reminder_date = fields.Datetime(string='Reminder')
     cover_image = fields.Image(string='Cover Image')
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.user, required=True, tracking=True)
+    collaborator_ids = fields.Many2many('res.users', 'keep_note_collaborator_rel', 'note_id', 'user_id', string='Collaborators')
     stage_id = fields.Many2one('keep.note.stage', string='Stage', ondelete='restrict', tracking=True,
                                group_expand='_read_group_stage_ids',
                                default=lambda self: self._default_stage_id())
+    todo_ids = fields.One2many('keep.note.todo', 'note_id', string='Checklist')
+    priority = fields.Selection([
+        ('0', 'Low'),
+        ('1', 'Medium'),
+        ('2', 'High'),
+        ('3', 'Urgent'),
+    ], string='Priority', default='0', tracking=True)
+    progress = fields.Float(string='Progress', compute='_compute_progress', store=True)
+    todo_count = fields.Integer(string='Checklist Items', compute='_compute_todo_count')
+
+    @api.depends('todo_ids')
+    def _compute_todo_count(self):
+        for record in self:
+            record.todo_count = len(record.todo_ids)
+
+    @api.depends('todo_ids', 'todo_ids.is_done')
+    def _compute_progress(self):
+        for record in self:
+            total = len(record.todo_ids)
+            done = len(record.todo_ids.filtered(lambda t: t.is_done))
+            record.progress = (done / total * 100) if total > 0 else 0.0
 
     @api.model
     def _default_stage_id(self):
@@ -56,6 +79,38 @@ class KeepNote(models.Model):
     def action_toggle_pinned(self):
         for record in self:
             record.is_pinned = not record.is_pinned
+
+    def action_send_email(self):
+        self.ensure_one()
+        template = self.env.ref('odoo_keep_notes.mail_template_keep_note_share', raise_if_not_found=False)
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form', raise_if_not_found=False)
+        ctx = {
+            'default_model': 'keep.note',
+            'default_res_ids': self.ids,
+            'default_template_id': template.id if template else False,
+            'default_composition_mode': 'comment',
+            'force_email': True,
+        }
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }
+
+    def action_view_todos(self):
+        self.ensure_one()
+        return {
+            'name': 'Checklist Tasks',
+            'type': 'ir.actions.act_window',
+            'res_model': 'keep.note.todo',
+            'view_mode': 'list,form',
+            'domain': [('note_id', '=', self.id)],
+            'context': {'default_note_id': self.id},
+        }
 
     def _get_reminder_activity_type(self):
         activity_type = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)

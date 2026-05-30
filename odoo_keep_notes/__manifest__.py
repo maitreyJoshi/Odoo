@@ -20,6 +20,7 @@
         'security/keep_note_security.xml',
         'security/ir.model.access.csv',
         'data/keep_note_stage_data.xml',
+        'data/keep_note_mail_template.xml',
         'views/keep_note_views.xml',
         'views/keep_note_tag_views.xml',
     ],

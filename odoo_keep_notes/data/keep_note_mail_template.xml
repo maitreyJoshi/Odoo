@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="mail_template_keep_note_share" model="mail.template">
+            <field name="name">Keep Note: Share Note</field>
+            <field name="model_id" ref="odoo_keep_notes.model_keep_note"/>
+            <field name="subject">{{ object.user_id.name }} shared a note with you: {{ object.name }}</field>
+            <field name="email_from">{{ object.user_id.email_formatted }}</field>
+            <field name="partner_to">{{ ','.join(map(str, object.collaborator_ids.mapped('partner_id.id'))) }}</field>
+            <field name="description">Template to share a keep note via email</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Hello,
+        <br/><br/>
+        <b><t t-out="object.user_id.name"/></b> has shared a note with you:
+        <br/><br/>
+    </p>
+    <div style="border: 1px solid #e1e1e1; border-radius: 8px; padding: 16px; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); max-width: 600px;">
+        <h2 style="margin-top: 0; color: #333;"><t t-out="object.name"/></h2>
+        
+        <t t-if="object.priority == '3'"><p style="color: #d9534f; font-weight: bold;">Priority: Urgent</p></t>
+        <t t-elif="object.priority == '2'"><p style="color: #f0ad4e; font-weight: bold;">Priority: High</p></t>
+        <t t-elif="object.priority == '1'"><p style="color: #5bc0de; font-weight: bold;">Priority: Medium</p></t>
+        
+        <div style="margin-top: 16px; color: #555;">
+            <t t-out="object.description"/>
+        </div>
+        
+        <t t-if="object.todo_ids">
+            <h3 style="margin-top: 24px; border-bottom: 1px solid #eee; padding-bottom: 8px; color: #444;">Checklist</h3>
+            <ul style="list-style-type: none; padding-left: 0;">
+                <t t-foreach="object.todo_ids" t-as="todo">
+                    <li style="margin-bottom: 8px;">
+                        <t t-if="todo.is_done">
+                            <span style="color: #28a745;">☑</span> <span style="text-decoration: line-through; color: #999;"><t t-out="todo.name"/></span>
+                        </t>
+                        <t t-else="">
+                            <span style="color: #666;">☐</span> <span><t t-out="todo.name"/></span>
+                        </t>
+                    </li>
+                </t>
+            </ul>
+        </t>
+    </div>
+    
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Best regards,<br/>
+        <t t-out="object.user_id.name"/>
+    </p>
+</div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+    </data>
+</odoo>

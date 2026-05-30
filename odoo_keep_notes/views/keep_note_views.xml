@@ -6,20 +6,25 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <button name="action_send_email" type="object" string="Share Note via Email" class="oe_highlight" icon="fa-envelope"/>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-tasks" type="object" name="action_view_todos" title="Tasks">
+                            <field widget="statinfo" name="todo_count" string="Tasks"/>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h1 style="width: 100%;">
-                                <field name="name" placeholder="Title" style="width: 100%;"/>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h1 style="width: 100%; margin: 0;">
+                                <field name="name" placeholder="Note Title..." style="width: 100%; font-size: 2.5rem; font-weight: 800; border-bottom: 2px solid #e2e8f0;"/>
                             </h1>
-                            <div class="ms-2">
-                                <button name="action_toggle_pinned" type="object" icon="fa-thumb-tack" class="text-dark btn-link fs-2" title="Unpin" invisible="not is_pinned" style="padding: 0; border: none; background: transparent;"/>
-                                <button name="action_toggle_pinned" type="object" icon="fa-thumb-tack" class="text-muted btn-link fs-2" title="Pin" invisible="is_pinned" style="padding: 0; border: none; background: transparent;"/>
+                            <div class="d-flex align-items-center ms-3">
+                                <field name="priority" widget="priority" class="me-3 fs-3"/>
+                                <button name="action_toggle_pinned" type="object" icon="fa-thumb-tack" class="text-dark btn-link fs-2" title="Unpin" invisible="not is_pinned" style="padding: 0; border: none; background: transparent; transform: rotate(-45deg);"/>
+                                <button name="action_toggle_pinned" type="object" icon="fa-thumb-tack" class="text-muted btn-link fs-2" title="Pin" invisible="is_pinned" style="padding: 0; border: none; background: transparent; opacity: 0.5;"/>
                             </div>
                         </div>
                     </div>
@@ -28,11 +33,13 @@
                             <field name="is_pinned" invisible="1"/>
                             <field name="is_trashed" widget="boolean_toggle" invisible="1"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="collaborator_ids" widget="many2many_avatar_user"/>
                         </group>
                         <group>
                             <field name="color" widget="color_picker"/>
                             <field name="reminder_date"/>
                             <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="progress" widget="progressbar" invisible="progress == 0"/>
                         </group>
                     </group>
                     <group>
@@ -40,7 +47,17 @@
                     </group>
                     <notebook>
                         <page string="Note">
-                            <field name="description" placeholder="Take a note..." widget="html" options="{'collaborative': true}"/>
+                            <field name="description" placeholder="Take a note..." widget="html" options="{'collaborative': true}" style="min-height: 200px;"/>
+                        </page>
+                        <page string="Checklist">
+                            <field name="todo_ids" widget="section_and_note_one2many" mode="list">
+                                <list editable="bottom" class="o_keep_checklist">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="display_type" column_invisible="True"/>
+                                    <field name="is_done" widget="boolean_toggle"/>
+                                    <field name="name" placeholder="Task item..." decoration-muted="is_done" decoration-strikethrough="is_done"/>
+                                </list>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
@@ -53,15 +70,20 @@
         <field name="name">keep.note.tree</field>
         <field name="model">keep.note</field>
         <field name="arch" type="xml">
-            <list>
-                <field name="name"/>
-                <field name="stage_id" widget="badge"/>
+            <list decoration-muted="active == False" decoration-warning="priority == '3'" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="priority" widget="priority"/>
+                <field name="name" class="fw-bold"/>
+                <field name="stage_id" widget="badge" decoration-info="stage_id != False"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                <field name="is_pinned" invisible="1"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="is_pinned" column_invisible="True"/>
                 <button name="action_toggle_pinned" type="object" icon="fa-thumb-tack" class="text-dark" title="Unpin" invisible="not is_pinned"/>
                 <button name="action_toggle_pinned" type="object" icon="fa-thumb-tack" class="text-muted" title="Pin" invisible="is_pinned"/>
-                <field name="reminder_date"/>
+                <field name="reminder_date" widget="remaining_days"/>
+                <field name="collaborator_ids" widget="many2many_avatar_user" optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="active" column_invisible="True"/>
             </list>
         </field>
     </record>
@@ -82,6 +104,9 @@
                 <field name="reminder_date"/>
                 <field name="cover_image"/>
                 <field name="active"/>
+                <field name="priority"/>
+                <field name="progress"/>
+                <field name="collaborator_ids"/>
                 <templates>
                     <t t-name="menu">
                         <t t-if="widget.editable">
@@ -93,28 +118,34 @@
                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_global_click">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_global_click shadow-sm rounded-3 border-0 transition-base" style="transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.classList.add('shadow');" onmouseout="this.style.transform='translateY(0)'; this.classList.remove('shadow');">
                             <t t-if="record.cover_image.raw_value">
-                                <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('keep.note', 'cover_image', record.id.raw_value)}')"/>
-                                <div class="o_kanban_image d-md-none" t-attf-style="background-image:url('#{kanban_image('keep.note', 'cover_image', record.id.raw_value)}')"/>
+                                <div class="w-100" t-attf-style="height: 140px; background-image:url('#{kanban_image('keep.note', 'cover_image', record.id.raw_value)}'); background-size: cover; background-position: center; border-radius: 3px 3px 0 0; margin-bottom: 12px;"/>
                             </t>
                             <div class="oe_kanban_content">
                                 <div class="d-flex align-items-start justify-content-between">
-                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
-                                    <a type="object" name="action_toggle_pinned" class="text-reset" style="margin-left: 10px;" title="Pin Status">
-                                        <i t-attf-class="fa fa-thumb-tack {{record.is_pinned.raw_value ? 'text-dark' : 'text-muted'}}" style="font-size: 16px; cursor: pointer;" title="Pin Note"/>
-                                    </a>
+                                    <strong class="o_kanban_record_title fs-5 fw-bold"><field name="name"/></strong>
+                                    <div class="d-flex align-items-center">
+                                        <field name="priority" widget="priority"/>
+                                        <a type="object" name="action_toggle_pinned" class="text-reset ms-2" title="Pin Status">
+                                            <i t-attf-class="fa fa-thumb-tack {{record.is_pinned.raw_value ? 'text-dark' : 'text-muted'}}" style="font-size: 16px; cursor: pointer; transform: rotate(-45deg);" title="Pin Note"/>
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="text-muted o_kanban_record_subtitle mt-1" t-if="record.description.raw_value">
+                                <div class="text-muted o_kanban_record_subtitle mt-2" t-if="record.description.raw_value">
                                     <field name="description" widget="html"/>
                                 </div>
-                                <div class="o_kanban_record_bottom mt-2">
+                                <div class="mt-2" t-if="record.progress.raw_value > 0">
+                                    <field name="progress" widget="progressbar" options="{'current_value': 'progress', 'max_value': 100, 'editable': false}"/>
+                                </div>
+                                <div class="o_kanban_record_bottom mt-3 pt-2 border-top">
                                     <div class="oe_kanban_bottom_left">
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <t t-if="record.reminder_date.raw_value"><span class="badge text-bg-warning ms-1"><field name="reminder_date" widget="date"/></span></t>
-                                        <field name="user_id" widget="many2one_avatar_user" invisible="1"/>
+                                    <div class="oe_kanban_bottom_right d-flex align-items-center">
+                                        <t t-if="record.reminder_date.raw_value"><span class="badge rounded-pill text-bg-warning ms-1"><i class="fa fa-bell-o me-1"/> <field name="reminder_date" widget="date"/></span></t>
+                                        <field name="collaborator_ids" widget="many2many_avatar_user" class="ms-1"/>
+                                        <field name="user_id" widget="many2one_avatar_user" class="ms-1"/>
                                     </div>
                                 </div>
                             </div>
@@ -137,6 +168,7 @@
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]" context="{'active_test': False}"/>
                 <group expand="0" string="Group By">
                     <filter string="Labels" name="group_by_tags" context="{'group_by': 'tag_ids'}"/>
+                    <filter string="Priority" name="group_by_priority" context="{'group_by': 'priority'}"/>
                     <filter string="Pinned Status" name="group_by_pinned" context="{'group_by': 'is_pinned'}"/>
                 </group>
             </search>
@@ -175,6 +207,35 @@
         <field name="view_mode">kanban,list,form,calendar</field>
         <field name="domain">[('reminder_date', '!=', False)]</field>
         <field name="search_view_id" ref="view_keep_note_search"/>
+    </record>
+
+    <record id="view_keep_note_todo_tree" model="ir.ui.view">
+        <field name="name">keep.note.todo.tree</field>
+        <field name="model">keep.note.todo</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" decoration-muted="is_done">
+                <field name="sequence" widget="handle"/>
+                <field name="is_done" widget="boolean_toggle"/>
+                <field name="name"/>
+                <field name="note_id" column_invisible="context.get('default_note_id')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_keep_note_todo_form" model="ir.ui.view">
+        <field name="name">keep.note.todo.form</field>
+        <field name="model">keep.note.todo</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="is_done" widget="boolean_toggle"/>
+                        <field name="note_id" invisible="context.get('default_note_id')"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
     </record>
 
     <menuitem id="menu_keep_notes_root" name="Keep Notes" web_icon="odoo_keep_notes,static/description/icon.png" sequence="10"/>

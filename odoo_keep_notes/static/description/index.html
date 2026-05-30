@@ -4,680 +4,763 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odoo Keep Notes - Premium Productivity Solution</title>
-    <!-- Google Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <title>Odoo Keep Notes - Premium Digital Whiteboard & Task Manager</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        :root {
-            --bg-color: #030712;
-            --surface: rgba(30, 41, 59, 0.6);
-            --surface-hover: rgba(30, 41, 59, 0.8);
-            --border: rgba(255, 255, 255, 0.1);
-            --border-hover: rgba(255, 255, 255, 0.2);
-            --text-main: #F8FAFC;
-            --text-muted: #94A3B8;
-            --accent-primary: #FBBF24;
-            /* Amber */
-            --accent-secondary: #A855F7;
-            /* Purple */
-            --accent-tertiary: #38BDF8;
-            /* Blue */
-            --radius-xl: 32px;
-            --radius-lg: 20px;
-            --radius-md: 12px;
-            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        .walkthrough-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 0 0 40px;
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-family: 'Outfit', sans-serif;
-            margin: 0;
-        }
-
-        /* Abstract Background Glows */
-        .bg-blobs {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.35;
-            animation: float 20s infinite alternate ease-in-out;
-        }
-
-        .blob-1 {
-            top: -10%;
-            left: -10%;
-            width: 50vw;
-            height: 50vw;
-            background: var(--accent-secondary);
-            animation-delay: 0s;
-        }
-
-        .blob-2 {
-            bottom: -20%;
-            right: -10%;
-            width: 60vw;
-            height: 60vw;
-            background: var(--accent-primary);
-            animation-delay: -5s;
-        }
-
-        .blob-3 {
-            top: 40%;
-            left: 20%;
-            width: 45vw;
-            height: 45vw;
-            background: var(--accent-tertiary);
-            animation-delay: -10s;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            50% {
-                transform: translate(5%, 10%) scale(1.1);
-            }
-
-            100% {
-                transform: translate(-5%, -5%) scale(0.9);
+        @media (max-width: 768px) {
+            .walkthrough-grid {
+                grid-template-columns: 1fr;
             }
         }
 
-        .store-wrapper {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 60px 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* Hero Section */
-        .hero-section {
+        .zoom-card {
+            background-color: #F5F3FF;
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid #DDD6FE;
             text-align: center;
-            padding: 80px 20px 100px 20px;
-            position: relative;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(251, 191, 36, 0.1);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            color: var(--accent-primary);
-            padding: 10px 24px;
-            border-radius: 50px;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
-        }
-
-        .hero-title {
-            font-size: 72px;
-            font-weight: 800;
-            letter-spacing: -2px;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, #FFFFFF 0%, #94A3B8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-subtitle {
-            font-size: 22px;
-            font-weight: 300;
-            color: var(--text-muted);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* Banner Showcase */
-        .banner-showcase {
-            width: 100%;
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-            margin-bottom: 120px;
-            border: 1px solid var(--border);
-            position: relative;
-        }
-
-        .banner-showcase::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: var(--radius-xl);
-            border: 2px solid transparent;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%) border-box;
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-
-        .banner-showcase img {
-            width: 100%;
-            display: block;
-            transform: scale(1.01);
-        }
-
-        /* Module Showcase Sequence */
-        .showcase-header {
-            text-align: center;
-            margin-bottom: 80px;
-        }
-
-        .showcase-tag {
-            color: var(--accent-secondary);
-            font-weight: 800;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 16px;
-            display: block;
-        }
-
-        .showcase-title {
-            font-size: 48px;
-            font-weight: 800;
-            color: #FFFFFF;
-        }
-
-        .sequence-container {
+            box-sizing: border-box;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
-            gap: 60px;
+            justify-content: space-between;
         }
 
-        /* Glassmorphic Row */
-        .focus-row {
-            background: var(--surface);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 60px;
-            display: flex;
-            align-items: center;
-            gap: 60px;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        .zoom-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.15) !important;
+            border-color: #A78BFA !important;
         }
 
-        .focus-row::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-        }
-
-        .focus-row:hover {
-            transform: translateY(-8px);
-            background: var(--surface-hover);
-            border-color: var(--border-hover);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(168, 85, 247, 0.1);
-        }
-
-        .focus-row.reverse {
-            flex-direction: row-reverse;
-        }
-
-        .focus-content {
-            flex: 1;
-        }
-
-        .focus-num {
-            font-family: 'Outfit', sans-serif;
-            font-size: 80px;
-            font-weight: 800;
-            position: absolute;
-            top: -20px;
-            left: 30px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .focus-row.reverse .focus-num {
-            left: auto;
-            right: 30px;
-        }
-
-        .focus-tag {
-            display: inline-block;
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--accent-tertiary);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            font-weight: 700;
-            font-size: 14px;
-            padding: 8px 16px;
-            border-radius: 50px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 24px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .focus-title {
-            font-size: 40px;
-            font-weight: 800;
-            color: #FFFFFF;
-            margin-bottom: 24px;
-            line-height: 1.2;
-            position: relative;
-            z-index: 1;
-        }
-
-        .focus-desc {
-            font-size: 18px;
-            color: var(--text-muted);
-            margin-bottom: 32px;
-            line-height: 1.7;
-            position: relative;
-            z-index: 1;
-        }
-
-        .focus-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .focus-list li {
-            font-size: 16px;
-            color: #E2E8F0;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-        }
-
-        .focus-list li i {
-            color: var(--accent-primary);
-            background: rgba(251, 191, 36, 0.1);
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 14px;
-            flex-shrink: 0;
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.1);
-        }
-
-        .focus-image {
-            flex: 1.3;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            border: 1px solid var(--border);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            position: relative;
-            z-index: 1;
-        }
-
-        .focus-image::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius-lg);
-            pointer-events: none;
-        }
-
-        .focus-image img {
+        .zoom-img-container {
             width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.7s ease;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .focus-row:hover .focus-image img {
-            transform: scale(1.05);
+        .zoom-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Footer */
-        .footer-section {
-            margin-top: 100px;
-            background: var(--surface);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 60px 40px;
-            text-align: center;
-        }
-
-        .author-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-primary) 0%, #F59E0B 100%);
-            color: #000;
-            font-size: 32px;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .author-name {
-            font-size: 28px;
-            font-weight: 800;
-            color: #FFF;
-            margin-bottom: 8px;
-        }
-
-        .author-title {
-            font-size: 16px;
-            color: var(--accent-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            display: block;
-        }
-
-        .footer-line {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border), transparent);
-            max-width: 400px;
-            margin: 0 auto 30px auto;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            font-size: 15px;
-            color: var(--text-muted);
-        }
-
-        .footer-links a {
-            color: #FFF;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--accent-primary);
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-
-            .focus-row,
-            .focus-row.reverse {
-                flex-direction: column;
-                padding: 40px 30px;
-                gap: 40px;
-            }
-
-            .hero-title {
-                font-size: 50px;
-            }
-
-            .focus-title {
-                font-size: 32px;
-            }
-
-            .focus-image {
-                width: 100%;
-            }
+        .zoom-card:hover .zoom-img {
+            transform: scale(1.08);
         }
     </style>
 </head>
 
-<body>
+<body
+    style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; line-height: 1.6; color: #2D3748; background-color: #ffffff; margin: 0; padding: 0;">
+    <div style="max-width: 900px; margin: 0 auto; padding: 0 20px;">
 
-    <!-- Animated Glassmorphism Background -->
-    <div class="bg-blobs">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
+        <!-- Module Header -->
+        <div
+            style="background-color: white; padding: 40px 0 20px; text-align: center; border-bottom: 1px solid #e5e7eb;">
+            <h1
+                style="font-size: 28px; font-weight: 600; color: #4C1D95; margin-bottom: 10px; line-height: 1.3; margin-top: 0;">
+                Odoo Keep Notes - Ultimate Whiteboard &amp; Task Manager</h1>
+            <p style="font-size: 18px; color: #B45309; font-weight: 600; margin-bottom: 30px; margin-top: 0;">A sleek,
+                dynamic digital whiteboard featuring interactive checklists, global triggers, and smart reminders.</p>
+        </div>
 
-    <div class="store-wrapper">
-
-        <!-- Hero Section -->
-        <div class="hero-section">
-            <div class="hero-badge">
-                <i class="fa-solid fa-bolt"></i> Ultimate Productivity
+        <!-- New Release Highlight Box -->
+        <div
+            style="background: linear-gradient(135deg, #FFFDF5 0%, #FEF2F2 100%); border: 1.5px solid #F59E0B; border-radius: 16px; padding: 24px; margin: 30px 0 10px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.08);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                <span
+                    style="background-color: #D97706; color: white; padding: 4px 10px; border-radius: 30px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">🔥
+                    New v18.0.2.0</span>
+                <span style="font-size: 14px; font-weight: 700; color: #92400E;">Latest Module Updates &amp;
+                    Features</span>
             </div>
-            <h1 class="hero-title">Odoo Keep Notes</h1>
-            <p class="hero-subtitle">
-                A sleek, highly productive, and visually stunning notes manager built natively for Odoo 18. Organize
-                your thoughts, pin tasks, and never miss a deadline.
+            <ul style="margin: 0; padding-left: 20px; color: #78350F; font-size: 14px; line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>📋 Interactive To-Do Checklists:</strong> Add dynamic checkbox
+                    sub-tasks directly inside note cards and watch the card progress bar calculate completion
+                    percentages in real-time.</li>
+                <li style="margin-bottom: 8px;"><strong>👥 Multi-User Note Collaboration:</strong> Assign multiple team
+                    members as collaborators to work on task whiteboard cards together, with integrated Chatter logs.
+                </li>
+                <li style="margin-bottom: 8px;"><strong>💌 One-Click HTML Email Sharing:</strong> Instantly broadcast
+                    custom-formatted HTML email summaries of checklists and rich note texts to external partners.</li>
+                <li style="margin-bottom: 8px;"><strong>🎨 Ultra-Modern UI Dashboard:</strong> Fully redesigned high-end
+                    Kanban, List, and Form views featuring custom starred priorities and days-remaining deadline warning
+                    alerts.</li>
+                <li style="margin-bottom: 8px;"><strong>🛡️ Strict Discard Safeguard:</strong> Modifying stage columns
+                    and clicking "Discard" now perfectly reverts changes, preventing accidental database save overrides.
+                </li>
+                <li style="margin-bottom: 0;"><strong>🚫 Empty-Note Validation:</strong> Prevents creation of blank,
+                    untitled, or empty note records to keep your workspace clean and professional.</li>
+            </ul>
+        </div>
+
+        <!-- Main Hero Section -->
+        <div style="padding: 0; margin: 40px 0;">
+            <p style="font-size: 18px; color: #2D3748; text-align: left; margin: 0 auto 30px; line-height: 1.7;">
+                Odoo Keep Notes seamlessly integrates into your Odoo 18 workspace, offering a beautiful drag-and-drop
+                Kanban workspace, global floating quick triggers, real-time team collaboration, and schedule-sensitive
+                timelines to keep your enterprise team focused and highly productive.
+            </p>
+            <div
+                style="background-color: #ffffff; border-radius: 16px; padding: 40px; margin: 40px 0; text-align: center;">
+                <img src="screenshot_kanban_new.png" alt="Odoo Keep Notes Dynamic Kanban Dashboard"
+                    style="width: 100%; height: auto; display: block; object-fit: contain; box-shadow: 0 10px 30px rgba(76, 29, 149, 0.15); border-radius: 12px;">
+            </div>
+        </div>
+
+        <!-- Core Philosophy -->
+        <h2 style="font-size: 32px; font-weight: 700; color: #4C1D95; margin: 60px 0 40px;">Why Choose Odoo Keep Notes?
+        </h2>
+        <p style="font-size: 16px; color: #2D3748; line-height: 1.8; margin-bottom: 40px; margin-top: 0;">
+            Most note tools are isolated, slow, and separate from your ERP workflows. <a href="#"
+                style="color: #4C1D95; font-weight: 600;">Odoo Keep Notes</a> is built 100% natively on the Odoo 18
+            framework. This means instant linking to your internal contacts, real-time Odoo Chatter logs, native backend
+            security compliance, and zero external API dependencies. One clean tool, unlimited team productivity.
+        </p>
+
+        <!-- Core Design Strengths - Card Grid (Soft Lavender Theme) -->
+        <div style="display: table; width: 100%; margin: 40px 0;">
+            <div style="display: table-row;">
+                <div style="display: table-cell; width: 33.33%; padding: 0 15px; vertical-align: top;">
+                    <div
+                        style="background-color: #F3E8FF; padding: 30px; border-radius: 16px; text-align: left; height: 280px; box-sizing: border-box; border: 1px solid #E9D5FF;">
+                        <span style="font-size: 24px; margin-bottom: 20px; display: block;">⚡</span>
+                        <h4
+                            style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #4C1D95; margin-top: 0;">
+                            Global Quick-Triggers</h4>
+                        <p style="font-size: 14px; color: #4B5563; line-height: 1.6; margin: 0;">
+                            Create new notes instantly from ANY dashboard or form view in Odoo using our floating action
+                            trigger without interrupting your current workflow.
+                        </p>
+                    </div>
+                </div>
+                <div style="display: table-cell; width: 33.33%; padding: 0 15px; vertical-align: top;">
+                    <div
+                        style="background-color: #F3E8FF; padding: 30px; border-radius: 16px; text-align: left; height: 280px; box-sizing: border-box; border: 1px solid #E9D5FF;">
+                        <span style="font-size: 24px; margin-bottom: 20px; display: block;">📋</span>
+                        <h4
+                            style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #4C1D95; margin-top: 0;">
+                            Checklist Progress</h4>
+                        <p style="font-size: 14px; color: #4B5563; line-height: 1.6; margin: 0;">
+                            Break notes down into interactive sub-tasks. Check them off as you work, and watch the card
+                            progress bar dynamically fill up!
+                        </p>
+                    </div>
+                </div>
+                <div style="display: table-cell; width: 33.33%; padding: 0 15px; vertical-align: top;">
+                    <div
+                        style="background-color: #F3E8FF; padding: 30px; border-radius: 16px; text-align: left; height: 280px; box-sizing: border-box; border: 1px solid #E9D5FF;">
+                        <span style="font-size: 24px; margin-bottom: 20px; display: block;">🔒</span>
+                        <h4
+                            style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #4C1D95; margin-top: 0;">
+                            Clean Architecture</h4>
+                        <p style="font-size: 14px; color: #4B5563; line-height: 1.6; margin: 0;">
+                            Native Python compliance with safe defaults prevents database registry locks, start-up
+                            warnings, or Odoo app store rejection.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features - Card Grid (Soft Warm Gold Theme) -->
+        <h2 style="font-size: 32px; font-weight: 700; color: #4C1D95; margin: 60px 0 40px;">Key Features &amp; Benefits
+        </h2>
+
+        <div style="display: table; width: 100%; margin: 40px 0;">
+            <div style="display: table-row;">
+                <div style="display: table-cell; width: 33.33%; padding: 0 15px; vertical-align: top;">
+                    <div
+                        style="background-color: #FEF3C7; padding: 30px; border-radius: 16px; text-align: left; height: 320px; box-sizing: border-box; border: 1px solid #FDE68A;">
+                        <span style="font-size: 24px; margin-bottom: 20px; display: block;">🎨</span>
+                        <h4
+                            style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #92400E; margin-top: 0;">
+                            Dynamic Kanban Whiteboard</h4>
+                        <p style="font-size: 14px; color: #78350F; line-height: 1.6; margin: 0;">
+                            Experience a gorgeous drag-and-drop board with full-width note headers, collaborator
+                            avatars, star priorities, and interactive stage flows.
+                        </p>
+                    </div>
+                </div>
+                <div style="display: table-cell; width: 33.33%; padding: 0 15px; vertical-align: top;">
+                    <div
+                        style="background-color: #FEF3C7; padding: 30px; border-radius: 16px; text-align: left; height: 320px; box-sizing: border-box; border: 1px solid #FDE68A;">
+                        <span style="font-size: 24px; margin-bottom: 20px; display: block;">🚀</span>
+                        <h4
+                            style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #92400E; margin-top: 0;">
+                            Global Floating Access</h4>
+                        <p style="font-size: 14px; color: #78350F; line-height: 1.6; margin: 0;">
+                            A premium, non-intrusive floating action button overlay provides immediate creation access
+                            from any window. Just type and save.
+                        </p>
+                    </div>
+                </div>
+                <div style="display: table-cell; width: 33.33%; padding: 0 15px; vertical-align: top;">
+                    <div
+                        style="background-color: #FEF3C7; padding: 30px; border-radius: 16px; text-align: left; height: 320px; box-sizing: border-box; border: 1px solid #FDE68A;">
+                        <span style="font-size: 24px; margin-bottom: 20px; display: block;">📅</span>
+                        <h4
+                            style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #92400E; margin-top: 0;">
+                            Timeline Calendar View</h4>
+                        <p style="font-size: 14px; color: #78350F; line-height: 1.6; margin: 0;">
+                            Visualize note deadlines natively inside Odoo's interactive Calendar. Reschedule easily
+                            using standard drag-and-drop calendar events.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: table; width: 100%; margin: 40px 0;">
+            <div style="display: table-row;">
+                <div style="display: table-cell; width: 33.33%; padding: 0 15px; vertical-align: top;">
+                    <div
+                        style="background-color: #FEF3C7; padding: 30px; border-radius: 16px; text-align: left; height: 320px; box-sizing: border-box; border: 1px solid #FDE68A;">
+                        <span style="font-size: 24px; margin-bottom: 20px; display: block;">👥</span>
+                        <h4
+                            style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #92400E; margin-top: 0;">
+                            Team Collaboration</h4>
+                        <p style="font-size: 14px; color: #78350F; line-height: 1.6; margin: 0;">
+                            Assign multiple team members as collaborators. Track change history, discuss notes, and
+                            receive automated logs via the integrated Odoo Chatter feed.
+                        </p>
+                    </div>
+                </div>
+                <div style="display: table-cell; width: 33.33%; padding: 0 15px; vertical-align: top;">
+                    <div
+                        style="background-color: #FEF3C7; padding: 30px; border-radius: 16px; text-align: left; height: 320px; box-sizing: border-box; border: 1px solid #FDE68A;">
+                        <span style="font-size: 24px; margin-bottom: 20px; display: block;">💌</span>
+                        <h4
+                            style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #92400E; margin-top: 0;">
+                            HTML Note Email Sharing</h4>
+                        <p style="font-size: 14px; color: #78350F; line-height: 1.6; margin: 0;">
+                            Send formatted external email summaries of your notes, lists, and checklists to clients or
+                            vendors instantly with a beautifully styled HTML template.
+                        </p>
+                    </div>
+                </div>
+                <div style="display: table-cell; width: 33.33%; padding: 0 15px; vertical-align: top;">
+                    <div
+                        style="background-color: #FEF3C7; padding: 30px; border-radius: 16px; text-align: left; height: 320px; box-sizing: border-box; border: 1px solid #FDE68A;">
+                        <span style="font-size: 24px; margin-bottom: 20px; display: block;">📊</span>
+                        <h4
+                            style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #92400E; margin-top: 0;">
+                            High-Density List Audit</h4>
+                        <p style="font-size: 14px; color: #78350F; line-height: 1.6; margin: 0;">
+                            Audit hundreds of files at once using an upgraded list view with colored priority badges,
+                            live progress indicators, and remaining-days deadline warnings.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workflow Highlight Section (Vibrant Purple Theme) -->
+        <div
+            style="position: relative; background-color: #F5F3FF; border: 2px solid #8B5CF6; border-radius: 20px; padding: 50px 30px 40px; margin: 60px 0 40px; box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);">
+            <div
+                style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background-color: #8B5CF6; color: #ffffff; padding: 8px 24px; border-radius: 25px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);">
+                Dynamic Stages Workspace
+            </div>
+
+            <p style="font-size: 16px; color: #4B5563; line-height: 1.7; margin: 20px 0 30px; text-align: center;">
+                Go beyond plain unorganized notes. Standardize your operations by tracking notes natively across 4
+                pre-configured customizable workflow stages.
+            </p>
+
+            <div style="display: table; width: 100%;">
+                <div style="display: table-row;">
+                    <div style="display: table-cell; width: 25%; padding: 0 10px; vertical-align: top;">
+                        <div
+                            style="background-color: #ffffff; padding: 25px; border-radius: 16px; text-align: left; min-height: 300px; box-sizing: border-box; border: 1px solid #DDD6FE; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1);">
+                            <h4
+                                style="font-size: 16px; font-weight: 600; margin-bottom: 15px; color: #7C3AED; margin-top: 0;">
+                                💡 Ideas</h4>
+                            <div style="font-size: 13px; color: #4B5563; line-height: 1.6;">
+                                <div style="padding: 8px 0;">"Capture unstructured thoughts"</div>
+                                <div style="height: 1px; background-color: #E9D5FF;"></div>
+                                <div style="padding: 8px 0;">"Brainstorm raw concepts"</div>
+                                <div style="height: 1px; background-color: #E9D5FF;"></div>
+                                <div style="padding: 8px 0;">"Save useful external web links"</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: table-cell; width: 25%; padding: 0 10px; vertical-align: top;">
+                        <div
+                            style="background-color: #ffffff; padding: 25px; border-radius: 16px; text-align: left; min-height: 300px; box-sizing: border-box; border: 1px solid #DDD6FE; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1);">
+                            <h4
+                                style="font-size: 16px; font-weight: 600; margin-bottom: 15px; color: #7C3AED; margin-top: 0;">
+                                📝 To-Do</h4>
+                            <div style="font-size: 13px; color: #4B5563; line-height: 1.6;">
+                                <div style="padding: 8px 0;">"Structure actionable tasks"</div>
+                                <div style="height: 1px; background-color: #E9D5FF;"></div>
+                                <div style="padding: 8px 0;">"Add priority tags &amp; colors"</div>
+                                <div style="height: 1px; background-color: #E9D5FF;"></div>
+                                <div style="padding: 8px 0;">"Set alarm date &amp; deadline"</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: table-cell; width: 25%; padding: 0 10px; vertical-align: top;">
+                        <div
+                            style="background-color: #ffffff; padding: 25px; border-radius: 16px; text-align: left; min-height: 300px; box-sizing: border-box; border: 1px solid #DDD6FE; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1);">
+                            <h4
+                                style="font-size: 16px; font-weight: 600; margin-bottom: 15px; color: #7C3AED; margin-top: 0;">
+                                ⚙️ Projects</h4>
+                            <div style="font-size: 13px; color: #4B5563; line-height: 1.6;">
+                                <div style="padding: 8px 0;">"Check off sub-task items"</div>
+                                <div style="height: 1px; background-color: #E9D5FF;"></div>
+                                <div style="padding: 8px 0;">"Monitor automatic progress"</div>
+                                <div style="height: 1px; background-color: #E9D5FF;"></div>
+                                <div style="padding: 8px 0;">"Tag team collaborators"</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: table-cell; width: 25%; padding: 0 10px; vertical-align: top;">
+                        <div
+                            style="background-color: #ffffff; padding: 25px; border-radius: 16px; text-align: left; min-height: 300px; box-sizing: border-box; border: 1px solid #DDD6FE; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1);">
+                            <h4
+                                style="font-size: 16px; font-weight: 600; margin-bottom: 15px; color: #7C3AED; margin-top: 0;">
+                                ✅ Completed</h4>
+                            <div style="font-size: 13px; color: #4B5563; line-height: 1.6;">
+                                <div style="padding: 8px 0;">"Audit resolved milestones"</div>
+                                <div style="height: 1px; background-color: #E9D5FF;"></div>
+                                <div style="padding: 8px 0;">"Send client completion reports"</div>
+                                <div style="height: 1px; background-color: #E9D5FF;"></div>
+                                <div style="padding: 8px 0;">"Archive completed project sheets"</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete Visual Walkthrough -->
+        <h2 style="font-size: 32px; font-weight: 700; color: #4C1D95; margin: 60px 0 40px;">Step-by-Step Walkthrough
+            Screenshots</h2>
+        <p style="font-size: 16px; color: #2D3748; line-height: 1.8; margin-bottom: 40px; margin-top: 0;">
+            Follow our high-fidelity layout sequence to see exactly how beautifully the elements align in your local
+            Odoo environment.
+        </p>
+
+        <h4 style="font-size: 20px; font-weight: 600; color: #4C1D95; margin: 40px 0 30px; text-align: center;">
+            Four-Step Walkthrough Flow:</h4>
+
+        <div class="walkthrough-grid">
+            <div class="zoom-card">
+                <div class="zoom-img-container">
+                    <img src="app_icon_switcher.png" alt="Native App Switcher" class="zoom-img">
+                </div>
+                <div>
+                    <h5 style="font-size: 16px; font-weight: 600; color: #4C1D95; margin: 0 0 8px;">1. Flat Icon</h5>
+                    <p style="font-size: 13px; color: #4B5563; margin: 0; line-height: 1.5;">Clean dashboard app
+                        launcher matching standard Odoo 18 style.</p>
+                </div>
+            </div>
+            <div class="zoom-card">
+                <div class="zoom-img-container">
+                    <img src="Home_05.png" alt="Global FAB overlay" class="zoom-img">
+                </div>
+                <div>
+                    <h5 style="font-size: 16px; font-weight: 600; color: #4C1D95; margin: 0 0 8px;">2. Floating Trigger
+                    </h5>
+                    <p style="font-size: 13px; color: #4B5563; margin: 0; line-height: 1.5;">Non-intrusive floating
+                        action overlay button available on any screen.</p>
+                </div>
+            </div>
+            <div class="zoom-card">
+                <div class="zoom-img-container">
+                    <img src="screenshot_form.png" alt="Form creation" class="zoom-img">
+                </div>
+                <div>
+                    <h5 style="font-size: 16px; font-weight: 600; color: #4C1D95; margin: 0 0 8px;">3. Note Workspace
+                    </h5>
+                    <p style="font-size: 13px; color: #4B5563; margin: 0; line-height: 1.5;">Add rich checklists,
+                        schedule active alarms, and choose card colors.</p>
+                </div>
+            </div>
+            <div class="zoom-card">
+                <div class="zoom-img-container">
+                    <img src="screenshot_calendar.png" alt="Timeline Calendar View" class="zoom-img">
+                </div>
+                <div>
+                    <h5 style="font-size: 16px; font-weight: 600; color: #4C1D95; margin: 0 0 8px;">4. Calendar timeline
+                    </h5>
+                    <p style="font-size: 13px; color: #4B5563; margin: 0; line-height: 1.5;">Drag, drop, reschedule note
+                        alarms natively inside standard timeline views.</p>
+                </div>
+            </div>
+        </div>
+
+        <div
+            style="background-color: #FEF3C7; padding: 30px; border-radius: 16px; margin: 0 0 40px; border: 1px solid #FDE68A;">
+            <h4 style="font-size: 20px; font-weight: 600; color: #92400E; margin: 0 0 20px; text-align: center;">And
+                Additional High-Density Views...</h4>
+            <p style="margin: 0; font-size: 15px; color: #78350F; line-height: 1.8;">
+                <strong style="color: #92400E;">🎨 Premium Kanban Board:</strong> Full cover header images, quick-star
+                priorities, and dynamic stages.<br>
+                <strong style="color: #92400E;">📊 High-Density List Dashboard:</strong> View active progress bars,
+                label tags, and days-remaining countdowns.<br>
+                <strong style="color: #92400E;">👥 Odoo Chatter Collaboration:</strong> Log modifications, tag team
+                users, and converse inside standard threads.<br>
+                <strong style="color: #92400E;">⏰ Alarm &amp; Reminder Badges:</strong> Safe bootstrap database
+                expanding stage parameters automatically.
             </p>
         </div>
 
-        <!-- Premium Store Banner -->
-        <div class="banner-showcase">
-            <img src="banner.png" alt="Odoo Keep Notes Banner" />
+        <!-- Feature Details Tabs -->
+        <h2 style="font-size: 32px; font-weight: 700; color: #4C1D95; margin: 60px 0 40px;">Module Feature Details</h2>
+        <p style="font-size: 16px; color: #2D3748; line-height: 1.8; margin-bottom: 40px; margin-top: 0;">
+            Dive deeper into the technical and graphical capabilities that make Odoo Keep Notes a must-have for active
+            enterprise teams.
+        </p>
+
+        <div style="display: table; width: 100%; margin: 0 0 40px;">
+            <div style="display: table-row;">
+                <div style="display: table-cell; width: 50%; padding-right: 15px; vertical-align: middle;">
+                    <img src="screenshot_checklist.png" alt="Checklist &amp; task progress"
+                        style="width: 100%; height: auto; display: block; object-fit: contain; box-shadow: 0 10px 30px rgba(76, 29, 149, 0.15); border-radius: 12px;">
+                </div>
+                <div style="display: table-cell; width: 50%; padding-left: 15px; vertical-align: middle;">
+                    <img src="screenshot_sharing.png" alt="Collaborative note sharing"
+                        style="width: 100%; height: auto; display: block; object-fit: contain; box-shadow: 0 10px 30px rgba(76, 29, 149, 0.15); border-radius: 12px;">
+                </div>
+            </div>
         </div>
 
-        <div class="showcase-header">
-            <span class="showcase-tag">Interface Walkthrough</span>
-            <h2 class="showcase-title">A Seamless Experience</h2>
-        </div>
+        <ul role="tablist" class="nav nav-tabs justify-content-center flex-nowrap" data-tabs="tabs"
+            style="border:none; background-color:unset; margin:0 auto; white-space: nowrap;">
+            <li class="nav-item"
+                style="border-top-right-radius:10px; border-top-left-radius:10px; background-color:#F5F3FF; margin-right:8px; border:1px solid #DDD6FE; border-bottom:0"
+                role="presentation">
+                <a href="#board_spec" data-bs-toggle="tab" class="nav-link show active"
+                    style="text-transform:uppercase; font-weight:600; font-size:13px; letter-spacing:1px; padding:11px 16px; border-top-left-radius:10px; border-top-right-radius:10px; color:#4C1D95; border:1px solid transparent"
+                    role="tab">Kanban Board</a>
+            </li>
+            <li class="nav-item"
+                style="border-top-right-radius:10px; border-top-left-radius:10px; background-color:#F5F3FF; margin-right:8px; border:1px solid #DDD6FE; border-bottom:0"
+                role="presentation">
+                <a href="#checklist_spec" data-bs-toggle="tab" class="nav-link"
+                    style="text-transform:uppercase; font-weight:600; font-size:13px; letter-spacing:1px; padding:11px 16px; border-top-left-radius:10px; border-top-right-radius:10px; color:#4C1D95; border:1px solid transparent"
+                    role="tab">Checklists</a>
+            </li>
+            <li class="nav-item"
+                style="border-top-right-radius:10px; border-top-left-radius:10px; background-color:#F5F3FF; margin-right:8px; border:1px solid #DDD6FE; border-bottom:0"
+                role="presentation">
+                <a href="#team_spec" data-bs-toggle="tab" class="nav-link"
+                    style="text-transform:uppercase; font-weight:600; font-size:13px; letter-spacing:1px; padding:11px 16px; border-top-left-radius:10px; border-top-right-radius:10px; color:#4C1D95; border:1px solid transparent"
+                    role="tab">Team Sharing</a>
+            </li>
+            <li class="nav-item"
+                style="border-top-right-radius:10px; border-top-left-radius:10px; background-color:#F5F3FF; margin-right:8px; border:1px solid #DDD6FE; border-bottom:0"
+                role="presentation">
+                <a href="#timeline_spec" data-bs-toggle="tab" class="nav-link"
+                    style="text-transform:uppercase; font-weight:600; font-size:13px; letter-spacing:1px; padding:11px 16px; border-top-left-radius:10px; border-top-right-radius:10px; color:#4C1D95; border:1px solid transparent"
+                    role="tab">Smart Timeline</a>
+            </li>
+            <li class="nav-item"
+                style="border-top-right-radius:10px; border-top-left-radius:10px; background-color:#F5F3FF; margin-right:0; border:1px solid #DDD6FE; border-bottom:0"
+                role="presentation">
+                <a href="#security_spec" data-bs-toggle="tab" class="nav-link"
+                    style="text-transform:uppercase; font-weight:600; font-size:13px; letter-spacing:1px; padding:11px 16px; border-top-left-radius:10px; border-top-right-radius:10px; color:#4C1D95; border:1px solid transparent"
+                    role="tab">Security</a>
+            </li>
+        </ul>
 
-        <div class="sequence-container">
+        <div class="tab-content"
+            style="background-color: #FDF2F8; border-radius: 0 0 20px 20px; padding: 40px; margin: 0 0 40px; border: 1px solid #FBCFE8;">
 
-            <!-- 1. App Icon Switcher -->
-            <div class="focus-row">
-                <span class="focus-num">01</span>
-                <div class="focus-content">
-                    <span class="focus-tag">Launch</span>
-                    <h3 class="focus-title">Native App Switcher Integration</h3>
-                    <p class="focus-desc">
-                        A customized premium flat icon blends flawlessly into your Odoo 18 home dashboard, giving you
-                        instant access to your notes from the start.
-                    </p>
-                    <ul class="focus-list">
-                        <li><i class="fa-solid fa-check"></i> <span>Premium icon design matching Odoo UI</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span>One-click direct launch into the workspace</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="focus-image">
-                    <img src="app_icon_switcher.png" alt="Native App Switcher" />
-                </div>
+            <div id="board_spec" class="tab-pane fade show active" role="tabpanel">
+                <h3 style="font-size: 22px; font-weight: 700; color: #4C1D95; margin-bottom: 20px; margin-top: 0;">
+                    Dynamic Drag-and-Drop Digital Whiteboard</h3>
+                <p style="color: #2D3748; line-height: 1.7; margin-bottom: 15px; font-size: 16px;">
+                    Move cards, track priorities, and get immediate visual status highlights:
+                </p>
+                <ul style="color: #4B5563; line-height: 1.7; margin: 0; padding-left: 20px; font-size: 15px;">
+                    <li><strong>Pre-configured Stages:</strong> Ideas, To-Do, Projects, and Completed</li>
+                    <li><strong>Header cover images:</strong> Set full-width image attachments directly as note headers
+                    </li>
+                    <li><strong>Starred Priority:</strong> Quick-click star overlays to mark urgent task elements</li>
+                    <li><strong>Collaborator Avatars:</strong> Displays small active icons of assigned collaborators on
+                        card faces</li>
+                    <li><strong>Custom Colors:</strong> Six distinct high-contrast card colors for quick visual sorting
+                    </li>
+                </ul>
             </div>
 
-            <!-- 2. Home 05 -->
-            <div class="focus-row reverse">
-                <span class="focus-num">02</span>
-                <div class="focus-content">
-                    <span class="focus-tag"
-                        style="color: var(--accent-secondary); background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2);">Access</span>
-                    <h3 class="focus-title">Global Floating Access</h3>
-                    <p class="focus-desc">
-                        Start capturing notes immediately anywhere in your Odoo system using the beautiful global
-                        floating action button seamlessly integrated into the page.
-                    </p>
-                    <ul class="focus-list">
-                        <li><i class="fa-solid fa-check"></i> <span>Available dynamically from any screen</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span>Non-intrusive modern FAB design</span></li>
-                    </ul>
-                </div>
-                <div class="focus-image">
-                    <img src="Home_05.png" alt="Global Floating Access & Homepage" />
-                </div>
+            <div id="checklist_spec" class="tab-pane fade" role="tabpanel">
+                <h3 style="font-size: 22px; font-weight: 700; color: #4C1D95; margin-bottom: 20px; margin-top: 0;">
+                    Nested Sub-Checklists &amp; Live Tracking</h3>
+                <p style="color: #2D3748; line-height: 1.7; margin-bottom: 15px; font-size: 16px;">
+                    Break large project parameters down into simple bite-sized action tasks:
+                </p>
+                <ul style="color: #4B5563; line-height: 1.7; margin: 0; padding-left: 20px; font-size: 15px;">
+                    <li><strong>Live Progress Bars:</strong> Watch note progress fill up automatically in real-time</li>
+                    <li><strong>Quick Checklist Pop-ups:</strong> Add, edit, or remove sub-task items quickly</li>
+                    <li><strong>Drag-and-Drop Reordering:</strong> Arrange sub-task sequence dynamically</li>
+                    <li><strong>Progress status list-view:</strong> View live progress percentages inside high-density
+                        lists</li>
+                </ul>
             </div>
 
-            <!-- 3. Screenshot Form -->
-            <div class="focus-row">
-                <span class="focus-num">03</span>
-                <div class="focus-content">
-                    <span class="focus-tag"
-                        style="color: var(--accent-primary); background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.2);">Quick
-                        Capture</span>
-                    <h3 class="focus-title">Create New Notes Instantly</h3>
-                    <p class="focus-desc">
-                        Don't let ideas slip away. Create rich, detailed notes with our highly intuitive and beautiful
-                        form configuration tailored for rapid input.
-                    </p>
-                    <ul class="focus-list">
-                        <li><i class="fa-solid fa-check"></i> <span>Collaborative HTML Area for rich media</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span>Assign vibrant colors and multi-labels</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span>Schedule specific alarms and reminders</span></li>
-                    </ul>
-                </div>
-                <div class="focus-image">
-                    <img src="screenshot_form.png" alt="Create New Note Interface" />
-                </div>
+            <div id="team_spec" class="tab-pane fade" role="tabpanel">
+                <h3 style="font-size: 22px; font-weight: 700; color: #4C1D95; margin-bottom: 20px; margin-top: 0;">Odoo
+                    Chatter Integration &amp; Email Shares</h3>
+                <p style="color: #2D3748; line-height: 1.7; margin-bottom: 15px; font-size: 16px;">
+                    Ensure your team and external stakeholders stay completely aligned:
+                </p>
+                <ul style="color: #4B5563; line-height: 1.7; margin: 0; padding-left: 20px; font-size: 15px;">
+                    <li><strong>Collaborator Assigns:</strong> Assign multiple database users as note card collaborators
+                    </li>
+                    <li><strong>Real-time Chatter logs:</strong> Post note modifications, tag team users, and converse
+                        in threads</li>
+                    <li><strong>Custom HTML Email Templates:</strong> Send formatted external email summaries in one
+                        click</li>
+                    <li><strong>Automated Activities:</strong> Connect reminders to create real-time calendar log
+                        activities</li>
+                </ul>
             </div>
 
-            <!-- 4. Screenshot Reminders -->
-            <div class="focus-row reverse">
-                <span class="focus-num">04</span>
-                <div class="focus-content">
-                    <span class="focus-tag">Stay on Track</span>
-                    <h3 class="focus-title">Dedicated Alarms Dashboard</h3>
-                    <p class="focus-desc">
-                        Focus only on upcoming deadlines and schedule-sensitive notes effortlessly with the specialized
-                        reminders dashboard.
-                    </p>
-                    <ul class="focus-list">
-                        <li><i class="fa-solid fa-check"></i> <span>View only notes with active alarms</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span>Never miss a critical deadline again</span></li>
-                    </ul>
-                </div>
-                <div class="focus-image">
-                    <img src="screenshot_reminders.png" alt="Dedicated Alarms Dashboard" />
-                </div>
+            <div id="timeline_spec" class="tab-pane fade" role="tabpanel">
+                <h3 style="font-size: 22px; font-weight: 700; color: #4C1D95; margin-bottom: 20px; margin-top: 0;">Smart
+                    Deadline Schedulers</h3>
+                <p style="color: #2D3748; line-height: 1.7; margin-bottom: 15px; font-size: 16px;">
+                    Schedule important tasks, plan reminders, and audit schedule items easily:
+                </p>
+                <ul style="color: #4B5563; line-height: 1.7; margin: 0; padding-left: 20px; font-size: 15px;">
+                    <li><strong>Active Alarm Dates:</strong> Set alarm milestones directly in note cards</li>
+                    <li><strong>Timeline Calendar View:</strong> Toggle Month, Week, and Day calendar grids</li>
+                    <li><strong>Drag-and-Drop Rescheduling:</strong> Drag events to update note alarms automatically
+                    </li>
+                    <li><strong>Overdue Highlights:</strong> Color alerts signal when notes are past their deadlines
+                    </li>
+                </ul>
             </div>
 
-            <!-- 5. Screenshot Kanban -->
-            <div class="focus-row">
-                <span class="focus-num">05</span>
-                <div class="focus-content">
-                    <span class="focus-tag"
-                        style="color: var(--accent-secondary); background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2);">Prioritize</span>
-                    <h3 class="focus-title">Show All Pinned Notes</h3>
-                    <p class="focus-desc">
-                        Access your most critical instructions at a single glance. Keep your tasks perfectly organized
-                        in a vibrant Kanban workspace.
-                    </p>
-                    <ul class="focus-list">
-                        <li><i class="fa-solid fa-check"></i> <span>Pinned notes automatically stay pinned on top</span>
-                        </li>
-                        <li><i class="fa-solid fa-check"></i> <span>Visual color-coding for rapid identification</span>
-                        </li>
-                        <li><i class="fa-solid fa-check"></i> <span>Smooth drag-and-drop digital whiteboard</span></li>
-                    </ul>
-                </div>
-                <div class="focus-image">
-                    <img src="screenshot_kanban.png" alt="Show All Pinned Notes in Kanban" />
-                </div>
-            </div>
-
-            <!-- 6. Screenshot Calendar -->
-            <div class="focus-row reverse">
-                <span class="focus-num">06</span>
-                <div class="focus-content">
-                    <span class="focus-tag"
-                        style="color: var(--accent-primary); background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.2);">Schedule</span>
-                    <h3 class="focus-title">Timeline Calendar Scheduling</h3>
-                    <p class="focus-desc">
-                        Visualize your action notes across Odoo's fully integrated interactive Calendar view to
-                        dynamically stay on top of your schedule.
-                    </p>
-                    <ul class="focus-list">
-                        <li><i class="fa-solid fa-check"></i> <span>Toggle Month, Week, and Day layouts</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span>Interactive drag-and-drop rescheduling</span></li>
-                    </ul>
-                </div>
-                <div class="focus-image">
-                    <img src="screenshot_calendar.png" alt="Timeline Calendar Scheduling" />
-                </div>
-            </div>
-
-            <!-- 7. Screenshot Labels -->
-            <div class="focus-row">
-                <span class="focus-num">07</span>
-                <div class="focus-content">
-                    <span class="focus-tag">Organize</span>
-                    <h3 class="focus-title">Organized Labels Management</h3>
-                    <p class="focus-desc">
-                        Easily manage your custom color-coded categories in a clean list view. Tag notes under custom
-                        labels like 'Work' or 'Personal'.
-                    </p>
-                    <ul class="focus-list">
-                        <li><i class="fa-solid fa-check"></i> <span>Filter and group search capabilities
-                                instantly</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span>Maintain absolute clarity across your data</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="focus-image">
-                    <img src="screenshot_labels.png" alt="Organized Labels Management" />
-                </div>
+            <div id="security_spec" class="tab-pane fade" role="tabpanel">
+                <h3 style="font-size: 22px; font-weight: 700; color: #4C1D95; margin-bottom: 20px; margin-top: 0;">Safe
+                    Odoo 18 Registry Architecture</h3>
+                <p style="color: #2D3748; line-height: 1.7; margin-bottom: 15px; font-size: 16px;">
+                    Secure, robust, and clean development best practices:
+                </p>
+                <ul style="color: #4B5563; line-height: 1.7; margin: 0; padding-left: 20px; font-size: 15px;">
+                    <li><strong>Access CSV rules:</strong> Full access rights controls (`ir.model.access.csv`) keeping
+                        data safe</li>
+                    <li><strong>No DB Locks:</strong> Standard field defaults prevent registry-load failures</li>
+                    <li><strong>XML-Schema compliance:</strong> Enforces Odoo 18 strict tag standards</li>
+                    <li><strong>LGPL-3 Licensed:</strong> Full liberty to customize or integrate for multiple clients
+                    </li>
+                </ul>
             </div>
 
         </div>
 
-        <!-- Footer / Credits -->
-        <div class="footer-section">
-            <div class="author-avatar">MJ</div>
-            <h2 class="author-name">Maitrey Joshi</h2>
-            <span class="author-title">Lead Odoo Developer</span>
-            <div class="footer-line"></div>
-            <div class="footer-links">
-                <span>Made for the Global Odoo Community</span>
-                <span>•</span>
-                <a href="mailto:maitreyjoshi60@gmail.com">Contact Developer</a>
+        <!-- Setup Steps -->
+        <h2 style="font-size: 32px; font-weight: 700; color: #4C1D95; margin: 60px 0 40px;">Simple Setup Process</h2>
+        <p style="font-size: 16px; color: #2D3748; line-height: 1.8; margin-bottom: 40px; margin-top: 0;">
+            Download and activate Odoo Keep Notes on your local server or production client in under 5 minutes.
+        </p>
+
+        <div style="display: table; width: 100%; margin: 40px 0;">
+            <div style="display: table-row;">
+                <div style="display: table-cell; width: 25%; padding: 0 10px; vertical-align: top;">
+                    <div
+                        style="background-color: #FEF3C7; padding: 25px; border-radius: 16px; text-align: center; height: 220px; box-sizing: border-box; border: 1px solid #FDE68A;">
+                        <div
+                            style="background-color: #92400E; color: white; width: 40px; height: 40px; border-radius: 50%; line-height: 40px; font-weight: 700; margin: 0 auto 15px;">
+                            1</div>
+                        <h4 style="font-size: 16px; font-weight: 600; color: #92400E; margin: 0 0 10px;">Download</h4>
+                        <p style="font-size: 13px; color: #78350F; line-height: 1.5; margin: 0;">Download Keep Notes
+                            package from Odoo App Store.</p>
+                    </div>
+                </div>
+                <div style="display: table-cell; width: 25%; padding: 0 10px; vertical-align: top;">
+                    <div
+                        style="background-color: #FEF3C7; padding: 25px; border-radius: 16px; text-align: center; height: 220px; box-sizing: border-box; border: 1px solid #FDE68A;">
+                        <div
+                            style="background-color: #92400E; color: white; width: 40px; height: 40px; border-radius: 50%; line-height: 40px; font-weight: 700; margin: 0 auto 15px;">
+                            2</div>
+                        <h4 style="font-size: 16px; font-weight: 600; color: #92400E; margin: 0 0 10px;">Extract</h4>
+                        <p style="font-size: 13px; color: #78350F; line-height: 1.5; margin: 0;">Extract zip into custom
+                            addons path (e.g. mj_custom).</p>
+                    </div>
+                </div>
+                <div style="display: table-cell; width: 25%; padding: 0 10px; vertical-align: top;">
+                    <div
+                        style="background-color: #FEF3C7; padding: 25px; border-radius: 16px; text-align: center; height: 220px; box-sizing: border-box; border: 1px solid #FDE68A;">
+                        <div
+                            style="background-color: #92400E; color: white; width: 40px; height: 40px; border-radius: 50%; line-height: 40px; font-weight: 700; margin: 0 auto 15px;">
+                            3</div>
+                        <h4 style="font-size: 16px; font-weight: 600; color: #92400E; margin: 0 0 10px;">Update Apps
+                        </h4>
+                        <p style="font-size: 13px; color: #78350F; line-height: 1.5; margin: 0;">Log into Odoo, turn on
+                            developer mode, update listing.</p>
+                    </div>
+                </div>
+                <div style="display: table-cell; width: 25%; padding: 0 10px; vertical-align: top;">
+                    <div
+                        style="background-color: #FEF3C7; padding: 25px; border-radius: 16px; text-align: center; height: 220px; box-sizing: border-box; border: 1px solid #FDE68A;">
+                        <div
+                            style="background-color: #92400E; color: white; width: 40px; height: 40px; border-radius: 50%; line-height: 40px; font-weight: 700; margin: 0 auto 15px;">
+                            4</div>
+                        <h4 style="font-size: 16px; font-weight: 600; color: #92400E; margin: 0 0 10px;">Activate</h4>
+                        <p style="font-size: 13px; color: #78350F; line-height: 1.5; margin: 0;">Locate Odoo Keep Notes,
+                            click install &amp; enjoy!</p>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <!-- Use Cases & Examples (Soft Warm Rose/Coral Theme) -->
+        <h2 style="font-size: 32px; font-weight: 700; color: #4C1D95; margin: 60px 0 40px;">Use Cases &amp; Examples
+        </h2>
+
+        <div
+            style="background-color: #FFF5F5; padding: 30px; border-radius: 16px; margin-bottom: 30px; text-align: left; border: 1px solid #FED7D7;">
+            <div style="text-align: left; margin-bottom: 20px; font-size: 40px;">🚀</div>
+            <h4
+                style="font-size: 20px; font-weight: 600; color: #9B2C2C; margin-bottom: 5px; margin-top: 0; border-bottom: 3px solid #E53E3E; display: inline-block; padding-bottom: 5px;">
+                Agile Project Sprints</h4>
+            <p style="color: #2D3748; line-height: 1.8; margin-bottom: 10px; margin-top: 15px;">
+                <strong>Scenario:</strong> Product owners and Scrum masters need a lightweight whiteboard sprint
+                sheet.<br>
+                With Keep Notes, agile teams can:
+            </p>
+            <ul style="color: #4A5568; line-height: 1.6; margin: 0 0 15px 0; padding-left: 20px;">
+                <li>Plan weekly sprints, drag tasks from To-Do to Completed</li>
+                <li>Add nested checklist items to capture agile deliverables</li>
+                <li>Tag team members to collaborate on target outcomes</li>
+            </ul>
+            <p style="color: #9B2C2C; font-weight: 600; margin: 0;">
+                Business Impact: Lightweight whiteboard increases task transparency without heavy task system overheads.
+            </p>
+        </div>
+
+        <div
+            style="background-color: #FFF5F5; padding: 30px; border-radius: 16px; margin-bottom: 30px; text-align: left; border: 1px solid #FED7D7;">
+            <div style="text-align: left; margin-bottom: 20px; font-size: 40px;">📝</div>
+            <h4
+                style="font-size: 20px; font-weight: 600; color: #9B2C2C; margin-bottom: 5px; margin-top: 0; border-bottom: 3px solid #E53E3E; display: inline-block; padding-bottom: 5px;">
+                Meeting Minutes &amp; Action Items</h4>
+            <p style="color: #2D3748; line-height: 1.8; margin-bottom: 10px; margin-top: 15px;">
+                <strong>Scenario:</strong> Board members and meeting leads need to capture rapid minutes &amp;
+                actions.<br>
+                Meeting moderators can organize outcomes conversationally:
+            </p>
+            <ul style="color: #4A5568; line-height: 1.6; margin: 0 0 15px 0; padding-left: 20px;">
+                <li>Create meeting templates using beautiful rich HTML note areas</li>
+                <li>List actions as checklist items, assigning stakeholders as collaborators</li>
+                <li>Send final HTML summaries to all client users in one click</li>
+            </ul>
+            <p style="color: #9B2C2C; font-weight: 600; margin: 0;">
+                Business Impact: Faster minutes summaries, clearer action accountability, and transparent logs.
+            </p>
+        </div>
+
+        <div
+            style="background-color: #FFF5F5; padding: 30px; border-radius: 16px; margin-bottom: 30px; text-align: left; border: 1px solid #FED7D7;">
+            <div style="text-align: left; margin-bottom: 20px; font-size: 40px;">🎓</div>
+            <h4
+                style="font-size: 20px; font-weight: 600; color: #9B2C2C; margin-bottom: 5px; margin-top: 0; border-bottom: 3px solid #E53E3E; display: inline-block; padding-bottom: 5px;">
+                Study Guides &amp; Learning Trackers</h4>
+            <p style="color: #2D3748; line-height: 1.8; margin-bottom: 10px; margin-top: 15px;">
+                <strong>Scenario:</strong> Trainees and managers need learning milestone trackers.<br>
+                Employees can manage their study logs easily:
+            </p>
+            <ul style="color: #4A5568; line-height: 1.6; margin: 0 0 15px 0; padding-left: 20px;">
+                <li>Track training milestones, link relevant PDF attachments</li>
+                <li>Configure study timelines via interactive Calendar schedules</li>
+                <li>Mark urgent study goals using Starred Priority tags</li>
+            </ul>
+            <p style="color: #9B2C2C; font-weight: 600; margin: 0;">
+                Business Impact: Standardized, visible employee onboarding tracking logs directly inside Odoo.
+            </p>
+        </div>
+
+        <!-- Technical Specifications -->
+        <h2 style="font-size: 32px; font-weight: 700; color: #4C1D95; margin: 60px 0 40px;">Technical Specifications
+        </h2>
+
+        <div style="display: table; width: 100%; margin: 40px 0;">
+            <div style="display: table-row;">
+                <div style="display: table-cell; width: 50%; padding-right: 15px; vertical-align: top;">
+                    <div
+                        style="background-color: #F5F3FF; padding: 30px; border-radius: 16px; height: 100%; box-sizing: border-box; border: 1px solid #DDD6FE;">
+                        <h4 style="font-size: 18px; font-weight: 600; color: #4C1D95; margin: 0 0 15px;">Requirements
+                        </h4>
+                        <ul style="color: #4B5563; line-height: 1.7; margin: 0; padding-left: 20px; font-size: 15px;">
+                            <li>Odoo 18.0 (Community &amp; Enterprise)</li>
+                            <li>PostgreSQL database setup</li>
+                            <li>Zero external API credentials required</li>
+                        </ul>
+
+                        <h4 style="font-size: 18px; font-weight: 600; color: #4C1D95; margin: 25px 0 15px;">Protocols
+                            Supported</h4>
+                        <ul style="color: #4B5563; line-height: 1.7; margin: 0; padding-left: 20px; font-size: 15px;">
+                            <li>Native Odoo 18 XML schema views</li>
+                            <li>Safe bootstrap Many2one constraints</li>
+                            <li>Chatter-logged messaging channels</li>
+                            <li>Inline responsive Bootstrap 5 styling</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="display: table-cell; width: 50%; padding-left: 15px; vertical-align: top;">
+                    <div
+                        style="background-color: #F5F3FF; padding: 30px; border-radius: 16px; height: 100%; box-sizing: border-box; border: 1px solid #DDD6FE;">
+                        <h4 style="font-size: 18px; font-weight: 600; color: #4C1D95; margin: 0 0 15px;">Performance
+                            Features</h4>
+                        <ul style="color: #4B5563; line-height: 1.7; margin: 0; padding-left: 20px; font-size: 15px;">
+                            <li>Standard indexing on Stage constraints</li>
+                            <li>No recursive database locks</li>
+                            <li>Highly-cached Bootstrap layouts</li>
+                            <li>Responsive desktop &amp; mobile assets</li>
+                        </ul>
+
+                        <h4 style="font-size: 18px; font-weight: 600; color: #4C1D95; margin: 25px 0 15px;">Security
+                            Features</h4>
+                        <ul style="color: #4B5563; line-height: 1.7; margin: 0; padding-left: 20px; font-size: 15px;">
+                            <li>Backend authorization CSV models</li>
+                            <li>Native field write authorization constraints</li>
+                            <li>Complete changes logged in Chatter feed</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div
+            style="border: 2px solid #4C1D95; color: #2D3748; padding: 40px; border-radius: 16px; text-align: center; margin: 60px 0 40px; background-color: #F5F3FF;">
+            <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 20px; margin-top: 0; color: #4C1D95;">Ready to
+                revolutionize your Odoo note-taking?</h2>
+            <p style="font-size: 18px; line-height: 1.7; margin-bottom: 30px; margin-top: 0; color: #4B5563;">
+                Experience the ultimate native productivity upgrade. Keep your team aligned, focus on deadlines, and
+                manage tasks natively in Odoo.
+            </p>
+            <p style="font-size: 16px; margin: 0; font-style: italic;">
+                For support, custom setups or questions, contact <a style="color:#4C1D95; font-weight: 600;"
+                    href="mailto:maitreyjoshi60@gmail.com">Mj</a>.
+            </p>
         </div>
 
     </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
